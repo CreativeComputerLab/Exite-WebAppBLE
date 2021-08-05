@@ -26,6 +26,7 @@ function Robot(device) {
   this.batteryLevel = Robot.batteryLevel.UNKNOWN
   this.accel_RX = null; //receiving
   this.pinIO_RX = null; //receiving
+  this.RX = null; //receiving
   this.TX = null; //sending
   this.writeMethod = null; //Once TX is set we can determine whether we can use writeValueWithoutResponse
   this.displayElement = null;

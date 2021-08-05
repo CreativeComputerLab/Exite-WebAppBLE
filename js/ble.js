@@ -12,6 +12,12 @@ const IOPinPrimaryService =        "e95d127b-251d-470a-a062-fa1922dfa9a8"  //E95
 
 const ACCELEROMETER_SERVICE =      "e95d0753-251d-470a-a062-fa1922dfa9a8"
   const ACCELEROMETER_DATA_CHAR =  "e95dca4b-251d-470a-a062-fa1922dfa9a8"
+
+const SETALL_SERVICE =      "e95d0001-251d-470a-a062-fa1922dfa9a8"
+  const SETALL_DATA_WRITE =  "e95d0002-251d-470a-a062-fa1922dfa9a8"
+//const SETALL_DATA_NOTIFY = TBD
+
+
  /**
   *  Global variables/constants
   */
@@ -76,7 +82,7 @@ function findAndConnect() {
   }
  */
 
-  navigator.bluetooth.requestDevice({ acceptAllDevices: true, optionalServices: [IOPinPrimaryService, ACCELEROMETER_SERVICE, 'e95db9fe-251d-470a-a062-fa1922dfa9a8', '0000180a-0000-1000-8000-00805f9b34fb' ] }).then(device => {
+  navigator.bluetooth.requestDevice({ acceptAllDevices: true, optionalServices: [IOPinPrimaryService, ACCELEROMETER_SERVICE, SETALL_SERVICE] }).then(device => {
   //navigator.bluetooth.requestDevice({ filters: bleFilters }).then(device => {
 
       //Note: If a robot changes name from one scan to the next, this
@@ -106,10 +112,20 @@ function findAndConnect() {
         finchBloxRobot = robot
       }
 */
-      console.log("robot")
-      console.log(robot)
-      connectNotificationsToRobot(robot, ACCELEROMETER_SERVICE, ACCELEROMETER_DATA_CHAR, onAccelerometerNotification, robot.accel_RX);
-      connectNotificationsToRobot(robot, IOPinPrimaryService, IOPinData, onIOPinNotification, robot.pinIO_RX);
+
+      //connectNotificationsToRobot(robot, ACCELEROMETER_SERVICE, ACCELEROMETER_DATA_CHAR, onAccelerometerNotification, robot.accel_RX);
+      //connectNotificationsToRobot(robot, IOPinPrimaryService, IOPinData, onIOPinNotification, robot.pinIO_RX);
+
+
+      connectTXToRobot(robot, SETALL_SERVICE, SETALL_DATA_WRITE, onIOPinNotification);
+
+
+
+
+
+
+
+
 
     }).catch(error => {
       console.error("Error requesting device: " + error.message)
@@ -177,6 +193,50 @@ function connectNotificationsToRobot(robot, svc, chr, notificationCallback, noti
       }*/
     });
 }
+
+function connectTXToRobot(robot, svc, chr) {
+
+  robot.devLetter = getNextDevLetter();
+  let device = robot.device
+
+  //Get a notification if this device disconnects.
+  device.addEventListener('gattserverdisconnected', onDisconnected);
+  //Attempt to connect to remote GATT Server.
+  device.gatt.connect().then(server => {
+      // Get the Service
+      console.log("getting service")
+      return server.getPrimaryService(svc);
+    })
+    .then(service => {
+      console.log("getting characteristic from ")
+      console.log(service)
+      // Get receiving Characteristic
+      service.getCharacteristic(chr)
+        .then(characteristic => {
+          robot.TX = characteristic;
+          if (robot.TX != null) {
+            //onConnectionComplete(robot);
+            console.log("TX OK");
+
+            var SetAllData = new Uint8Array(5);
+            SetAllData[0] = 16;
+            SetAllData[1] = 8;
+            SetAllData[2] = 4;
+            SetAllData[3] = 2;
+            SetAllData[4] = 1;   
+
+            robot.TX.writeValue(SetAllData);  
+                      
+          }
+        })
+      })    
+    .catch(error => {
+      console.error("Device service request failed: " + error.message);
+    });
+}
+
+
+
 
 /**
  * onConnectionComplete - Called when a device has been connected and its RX
