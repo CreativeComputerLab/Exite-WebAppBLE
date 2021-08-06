@@ -13,9 +13,11 @@ const IOPinPrimaryService =        "e95d127b-251d-470a-a062-fa1922dfa9a8"  //E95
 const ACCELEROMETER_SERVICE =      "e95d0753-251d-470a-a062-fa1922dfa9a8"
   const ACCELEROMETER_DATA_CHAR =  "e95dca4b-251d-470a-a062-fa1922dfa9a8"
 
-const SETALL_SERVICE =      "e95d0001-251d-470a-a062-fa1922dfa9a8"
-  const SETALL_DATA_WRITE =  "e95d0002-251d-470a-a062-fa1922dfa9a8"
-//const SETALL_DATA_NOTIFY = TBD
+const SETALL_SERVICE =        "e95d0001-251d-470a-a062-fa1922dfa9a8"
+  const SETALL_DATA_NOTIFY =  "e95d0002-251d-470a-a062-fa1922dfa9a8"
+  const SETALL_DATA_COMMAND = "e95d0003-251d-470a-a062-fa1922dfa9a8"
+
+const MICROBIT_BLE_MAX_PACKET_BYTES = 20;
 
 
  /**
@@ -82,7 +84,7 @@ function findAndConnect() {
   }
  */
 
-  navigator.bluetooth.requestDevice({ acceptAllDevices: true, optionalServices: [IOPinPrimaryService, ACCELEROMETER_SERVICE, SETALL_SERVICE] }).then(device => {
+  navigator.bluetooth.requestDevice({ acceptAllDevices: true, optionalServices: [SETALL_SERVICE] }).then(device => {
   //navigator.bluetooth.requestDevice({ filters: bleFilters }).then(device => {
 
       //Note: If a robot changes name from one scan to the next, this
@@ -100,6 +102,7 @@ function findAndConnect() {
 */
       let robot = getRobotByName(device.name)
       if (robot == null) {
+        console.log("New Robot")
         robot = new Robot(device)
         robots.push(robot);
       }
@@ -116,8 +119,8 @@ function findAndConnect() {
       //connectNotificationsToRobot(robot, ACCELEROMETER_SERVICE, ACCELEROMETER_DATA_CHAR, onAccelerometerNotification, robot.accel_RX);
       //connectNotificationsToRobot(robot, IOPinPrimaryService, IOPinData, onIOPinNotification, robot.pinIO_RX);
 
-
-      connectTXToRobot(robot, SETALL_SERVICE, SETALL_DATA_WRITE, onIOPinNotification);
+      connectNotificationsToRobot(robot, SETALL_SERVICE, SETALL_DATA_NOTIFY, onIOPinNotification);
+      connectTXToRobot(robot, SETALL_SERVICE, SETALL_DATA_COMMAND);
 
 
 
@@ -133,7 +136,7 @@ function findAndConnect() {
     })
 }
 
-function connectNotificationsToRobot(robot, svc, chr, notificationCallback, notificationRX) {
+function connectNotificationsToRobot(robot, svc, chr, notificationCallback) {
 
   robot.devLetter = getNextDevLetter();
   let device = robot.device
@@ -157,7 +160,7 @@ function connectNotificationsToRobot(robot, svc, chr, notificationCallback, noti
           characteristic.addEventListener('characteristicvaluechanged',
             notificationCallback);
           //console.log('Notifications have been started.');
-          notificationRX = characteristic;
+          robot.RX = characteristic;
           if (robot.TX != null) {
             onConnectionComplete(robot);
           }
@@ -218,7 +221,7 @@ function connectTXToRobot(robot, svc, chr) {
             //onConnectionComplete(robot);
             console.log("TX OK");
 
-            var SetAllData = new Uint8Array(5);
+            var SetAllData = new Uint8Array(MICROBIT_BLE_MAX_PACKET_BYTES);
             SetAllData[0] = 16;
             SetAllData[1] = 8;
             SetAllData[2] = 4;
