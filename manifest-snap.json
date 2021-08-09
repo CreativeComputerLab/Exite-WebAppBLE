@@ -1,0 +1,33 @@
+{
+  "name": "BirdBrain Snap!",
+  "short_name": "BBT Snap!",
+  "icons": [{
+    "src": "img/icon_snap_32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    }, {
+    "src": "img/icon_snap_128x128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    }, {
+      "src": "img/icon_snap_152x152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    }, {
+      "src": "img/icon_snap_192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }, {
+      "src": "img/icon_snap_256x256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    }, {
+      "src": "img/icon_snap_512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }],
+  "start_url": "useSnap.html",
+  "display": "fullscreen",
+  "background_color": "#881199",
+  "theme_color": "#089BAB"
+}

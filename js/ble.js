@@ -253,20 +253,20 @@ function onConnectionComplete(robot) {
     return;
   }
 
-  //console.log("Connection to " + robot.fancyName + " complete. Starting sensor polling.")
+  console.log("Connection to " + robot.fancyName + " complete. Starting sensor polling.")
   robot.initialize()
 
   closeErrorModal()
 
 
-  if (!robots.includes(robot)) { robots.push(robot) }
-  if (FinchBlox && fbFrontend.RowDialog.currentDialog && fbFrontend.RowDialog.currentDialog.constructor == fbFrontend.DiscoverDialog) {
-    finchBloxRobot = robot
-  }
-  updateConnectedDevices();
-  updateBatteryStatus()
+  //if (!robots.includes(robot)) { robots.push(robot) }
+  //if (FinchBlox && fbFrontend.RowDialog.currentDialog && fbFrontend.RowDialog.currentDialog.constructor == fbFrontend.DiscoverDialog) {
+    //finchBloxRobot = robot
+ // }
+  //updateConnectedDevices();
+  //updateBatteryStatus()
   //open snap or brython.
-  loadIDE();
+  //loadIDE();
 }
 
 /**
@@ -325,15 +325,14 @@ function onIOPinNotification(event) {
   var dataArray = new Uint8Array(event.target.value.buffer);
   var deviceName = event.target.service.device.name;
   console.log('IO Pin Data Received from ' + deviceName + ":");
+  //console.log(event.target);
   console.log(dataArray);
 
   //Do Something with the data
-  /*
   const robot = getRobotByName(deviceName)
   if (robot != null && dataArray != null) {
-    robot.receiveSensorData(dataArray)
+    robot.receiveNotificationData(dataArray)
   }
-  */
 }
 /**
  * getRobotByName - Returns the Robot with the given device name or null if no
