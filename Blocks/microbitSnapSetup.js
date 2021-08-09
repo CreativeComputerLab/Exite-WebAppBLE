@@ -1,8 +1,11 @@
 
                   function setupSnapMicrobit() {
                     window.snapMicrobit = {};
-                    window.snapMicrobit.notificationData.A = Uint8Array(100).fill(0);
+                    window.snapMicrobit.notificationData = {};
+                    window.snapMicrobit.notificationData.A = new Uint8Array(100).fill(0);
+                    window.snapMicrobit.microbitIsV2 = {};
                     window.snapMicrobit.microbitIsV2.A = false;
+                    window.snapMicrobit.robotType = {};
                     window.snapMicrobit.robotType.A = 3;
 
                     //console.log("setting up message channel")
@@ -10,9 +13,11 @@
                     window.snapMicrobit.messageChannel.port1.onmessage = function (e) {
                         console.log("Got a message: ");
                         console.log(e.data);
-                        if (e.data.notificationData != null && e.data.robot != null) {
+                        if (e.data.newNotificationData != null && e.data.robot != null) {
                           let robot = e.data.robot;
                           overlaySubArray(window.snapMicrobit.notificationData[robot], e.data.newNotificationData, e.data.frameNumber);
+                          console.log("New Notification Data:");
+                          console.log(window.snapMicrobit.notificationData[robot]);
                           window.snapMicrobit.robotType[robot] = e.data.robotType;
                           window.snapMicrobit.microbitIsV2[robot] = e.data.hasV2Microbit;
                         }
@@ -61,8 +66,9 @@
                       let distVal = 0;
                       return (distVal);
                     }
-
+}
                   let currentVersion = 1
+                  console.log("BirdBrain ready to set up");
                   if (window.snapMicrobit === undefined ||
                     window.snapMicrobit.version === undefined ||
                     window.snapMicrobit.version < currentVersion) {
@@ -70,6 +76,6 @@
                     setupSnapMicrobit()
                     window.snapMicrobit.version = currentVersion
                   } else {
-                    //console.log("BirdBrain already set up");
+                    console.log("BirdBrain already set up");
                   }
                 

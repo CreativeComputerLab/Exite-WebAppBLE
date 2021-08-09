@@ -24,8 +24,7 @@ function Robot(device) {
   this.devLetter = "A";
   this.fancyName = getDeviceFancyName(device.name);
   this.batteryLevel = Robot.batteryLevel.UNKNOWN
-  this.accel_RX = null; //receiving
-  this.pinIO_RX = null; //receiving
+  this.setAllData = null;  // to be initialized when connected
   this.RX = null; //receiving
   this.TX = null; //sending
   this.writeMethod = null; //Once TX is set we can determine whether we can use writeValueWithoutResponse
@@ -196,12 +195,12 @@ Robot.prototype.initialize = function() {
   }
 
   //Robot state arrays
-  this.initializeDataArrays();
+  //this.initializeDataArrays();
   this.isConnected = true;
   this.userDisconnected = false;
   //this.isReconnecting = false; //uncomment for autoreconnect
   this.isInitialized = false;
-
+/*
   if (Robot.propertiesFor[this.type].getFirmwareCommand != null) {
     //Read the current robot's firmware version to determine if it includes a V2 micro:bit
     this.write(Robot.propertiesFor[this.type].getFirmwareCommand)
@@ -210,6 +209,7 @@ Robot.prototype.initialize = function() {
     this.startSetAll();
     this.isInitialized = true;
   }
+  */
 }
 
 /**
@@ -219,11 +219,7 @@ Robot.prototype.initialize = function() {
  * should be modified using updateData.
  */
 Robot.prototype.initializeDataArrays = function() {
-  this.setAllData = new RobotData(Robot.initialSetAllFor(this.type));
-  this.ledDisplayData = new RobotData(INITIAL_LED_DISPLAY_ARRAY);
-  if (this.isA(Robot.ofType.FINCH)) {
-    this.motorsData = new RobotData(FINCH_INITIAL_MOTOR_ARRAY);
-  }
+  this.setAllData = Uint8Array(100).fill(0);
 }
 
 /**
@@ -828,7 +824,7 @@ Robot.prototype.setPrint = function(printChars) {
 Robot.prototype.stopAll = function() {
   if (this.printTimer !== null) { clearTimeout(this.printTimer); }
   this.write(Robot.propertiesFor[this.type].stopCommand);
-  this.initializeDataArrays();
+  //this.initializeDataArrays();
 }
 
 /**

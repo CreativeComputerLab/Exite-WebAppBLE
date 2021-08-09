@@ -871,8 +871,8 @@ Robot.prototype.receiveNotificationData = function(data) {
   }
 
   var frameNumber = this.getFrameNumber(data);
-  console.log("Frame number = " + frameNumber);
-  this.currentNotificationData = data
+  //console.log("Frame number = " + frameNumber);
+  //this.currentNotificationData = data
   //console.log(data)
   sendMessage({
     robot: this.devLetter,

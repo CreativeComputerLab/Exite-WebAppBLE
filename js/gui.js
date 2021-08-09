@@ -286,6 +286,7 @@ function loadIDE(filename) {
       iframe.remove();
     }
     iframe = document.createElement("iframe");
+    //iframe.setAttribute(‘id’,‘snapIframe’);
     iframe.frameBorder = "0";
     if (useHID) {
       if(hidRobot != null && hidRobot.isFinch) {

@@ -266,7 +266,7 @@ function onConnectionComplete(robot) {
   //updateConnectedDevices();
   //updateBatteryStatus()
   //open snap or brython.
-  //loadIDE();
+  loadIDE();
 }
 
 /**
@@ -324,9 +324,9 @@ function onAccelerometerNotification(event) {
 function onIOPinNotification(event) {
   var dataArray = new Uint8Array(event.target.value.buffer);
   var deviceName = event.target.service.device.name;
-  console.log('IO Pin Data Received from ' + deviceName + ":");
+  //console.log('IO Pin Data Received from ' + deviceName + ":");
   //console.log(event.target);
-  console.log(dataArray);
+ // console.log(dataArray);
 
   //Do Something with the data
   const robot = getRobotByName(deviceName)
