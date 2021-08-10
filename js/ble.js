@@ -104,7 +104,10 @@ function findAndConnect() {
       if (robot == null) {
         console.log("New Robot")
         robot = new Robot(device)
+        console.log("New Robot")
         robots.push(robot);
+        console.log("New Robot")
+        console.log(robot);
       }
 /*
       //This block is temporary until ble scanning is implemented. For now, we
@@ -373,6 +376,9 @@ function getRobotByLetter(letter) {
  * @return {?string}  Next available id letter of null if they are all taken
  */
 function getNextDevLetter() {
+  return 'A';
+
+  /*
   let letter = 'A';
   if (!devLetterUsed(letter)) {
     return letter;
@@ -389,6 +395,8 @@ function getNextDevLetter() {
       }
     }
   }
+
+  */
 }
 
 /**

@@ -212,9 +212,9 @@ Robot.prototype.initialize = function() {
  * should be modified using updateData.
  */
 Robot.prototype.initializeDataArrays = function() {
-  this.setAllData = Uint8Array(100).fill(0);
+  this.setAllData = new Uint8Array(100).fill(0);
 
-  var this.setAllChanged = [];
+  this.setAllChanged = [];
   for (var i = 0; i < 5; i++) {
     this.setAllChanged.push(false);
   }
@@ -226,6 +226,8 @@ Robot.prototype.initializeDataArrays = function() {
  */
 Robot.prototype.startSetAll = function() {
   //console.log("Starting setAll. interval=" + (MIN_SET_ALL_INTERVAL + this.setAllTimeToAdd));
+  console.log("startSetAll disabled");
+  /*
   if (this.setAllInterval != null) {
     clearInterval(this.setAllInterval)
   }
@@ -236,6 +238,7 @@ Robot.prototype.startSetAll = function() {
   }
 
   this.setAllInterval = setInterval( this.sendSetAll.bind(this), interval );
+  */
 }
 
 /**
@@ -834,5 +837,10 @@ Robot.prototype.receiveNotificationData = function(data) {
     newNotificationData: data,
     hasV2Microbit: this.hasV2Microbit
   });
+
+  // The last notification frame triggers a send all event
+  if (frameNumber == 4)
+    this.sendSetAll();
+
 
 }

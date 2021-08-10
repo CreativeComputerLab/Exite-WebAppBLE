@@ -266,7 +266,7 @@ function loadIDE(filename) {
     if (r.isA(Robot.ofType.FINCH)) {
       projectName = "PWAFinchSingleDevice";
     } else {
-      projectName = "PWAHummingbirdSingleDevice";
+      projectName = "microbitTestProjectBLE";
     }
   } else {
     if (allRobotsAreFinches()) {
@@ -323,7 +323,7 @@ function loadIDE(filename) {
       iframe.src = "brython/editor.html"; //"brython/console.html";  //"http://brython.info/console.html"
     } else if (internetIsConnected) {
       if (projectName) {
-        iframe.src = "https://snap.berkeley.edu/snap/snap.html#present:Username=birdbraintech&ProjectName=" + projectName + "&editMode&lang=" + language;
+        iframe.src = "https://snap.berkeley.edu/snap/snap.html#present:Username=CreativeComputerLab&ProjectName=" + projectName + "&editMode&lang=" + language;
       } else {
         iframe.src = "https://snap.berkeley.edu/snap/snap.html"
       }

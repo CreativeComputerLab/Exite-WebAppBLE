@@ -23,8 +23,8 @@ function onMessage(e) {
     textToSpeech(e.data.val)
   } else {
     // incoming command from a snap block
-    let robot = getRobotByLetter(message.robot);
-    updateSetAll(robot, e.data.pin, e.data.value, e.data.isDigital, e.data.isOutput, e.data.isServo, e.data.isServoPulse, e.data.isAnalogPeriod, e.data.isDigitalPulse, e.data.digitalPulseLevel) {
+    let robot = getRobotByLetter(e.data.robot);
+    updateSetAll(robot, e.data.pin, e.data.value, e.data.isDigital, e.data.isOutput, e.data.isServo, e.data.isServoPulse, e.data.isAnalogPeriod, e.data.isDigitalPulse, e.data.digitalPulseLevel);
 
   } 
 }
