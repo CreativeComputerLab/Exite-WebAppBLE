@@ -1,6 +1,6 @@
 
-                  if (window.birdbrain.getHBSensor === undefined) {
-                    window.birdbrain.getHBSensor = function (sensor, port, robot) {
+                  if (window.birdbrain.readPinBlock === undefined) {
+                    window.birdbrain.getHBSensor = function (pin) {
                       const distanceScaling = 117/100;
                       const dialScaling = 100/230;
                       const lightScaling = 100/255;
@@ -25,5 +25,5 @@
                     }
                   }
 
-                  return window.birdbrain.getHBSensor(sensor, port, 'A');
+                  return window.birdbrain.readPinBlock(pin);
                 

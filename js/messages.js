@@ -21,14 +21,97 @@ function onMessage(e) {
   } else if (e.data.message == "SPEAK") {
     console.log("tts " + e.data.val)
     textToSpeech(e.data.val)
-
-  } else if (useHID) {
-    //This is a legacy robot command
-    parseLegacyMessage(e.data)
   } else {
-    //This message is a micro:bit robot command
-    parseMessage(e.data);
-  }
+    // incoming command from a snap block
+    let robot = getRobotByLetter(message.robot);
+    updateSetAll(robot, e.data.pin, e.data.value, e.data.isDigital, e.data.isOutput, e.data.isServo, e.data.isServoPulse, e.data.isAnalogPeriod, e.data.isDigitalPulse, e.data.digitalPulseLevel) {
+
+  } 
+}
+
+
+
+function updateSetAll(robot, pin, value, isDigital, isOutput, isServo, isServoPulse, isAnalogPeriod, isDigitalPulse, digitalPulseLevel) {
+       
+            var pinData = 0;
+
+            if (pin < 17) {  //IO pins
+                pinData = value & 0xFFFF;  // The 16 Least Signifigant bytes contain the value
+
+                // Set the bit(s) to determine the type of the pin
+                pinData = writeBit(pinData, 16, isDigital);  // The 16th bit contains the A or D mode
+                pinData = writeBit(pinData, 17, isOutput);  // The 17th bit contains the input/output status
+                pinData = writeBit(pinData, 18, isServo);     
+                pinData = writeBit(pinData, 19, isServoPulse);      
+                pinData = writeBit(pinData, 20, isAnalogPeriod);      
+                pinData = writeBit(pinData, 21, isDigitalPulse);  
+
+                // High low parameter for digital pulse edge must be 0 or 1
+                if (isDigitalPulse == 1)
+                    if (value != 0)
+                        value = 1;
+                pinData = writeBit(pinData, 22, value);                
+                pinData = writeBit(pinData, 23, 1);  // The 23rd bit set to 1 indicates touched i.e. fresh data. 
+                                                     // This is needed otherwise pin 0 set to 0 would be taken to be no new data.
+
+                //LOG.debug("updateSetAll:  pinData = {}", Integer.toHexString(pinData));
+                //LOG.debug("updateSetAll().isdigitalpulsepin value = {}", isDigitalPulsePin(pinData));
+                //LOG.debug("pinData Reverse Endian = {}", Integer.toHexString(reverseIntEndian(pinData)));
+
+            }
+
+            else if (pin == 17) { // LED Display matrix
+                 pinData = value & 0xFFFFFF; //3 bytes make up LED array data
+                if (value == 1){
+                    //LOG.debug("Sending Enable Display Command");
+                    pinData = writeBit(pinData, 30, 1); // enable
+                    pinData = writeBit(pinData, 29, 0); // overwrite previous disable command if configured                  
+                }
+                else if (value == 0){
+                    //LOG.debug("Sending Disable Display Command");
+                    pinData = writeBit(pinData, 29, 1); // disable
+                    pinData = writeBit(pinData, 30, 0); // overwrite previous enable command if configured                  
+                }
+                else {  // Matrix Data
+                    pinData = value;
+                    pinData = writeBit(pinData, 30, 0); // disable display enable and disable bits
+                    pinData = writeBit(pinData, 29, 0); //                  
+                    pinData = writeBit(pinData, 28, 1); // set LED display matrix bit                  
+                }
+
+                pinData = writeBit(pinData, 31, 1);  // Fresh data bit indicator
+
+                //LOG.debug("Display pinData = {}", Integer.toHexString(pinData));
+            }
+
+            var frameNum = getFrameNumberFromPin(pin);
+            robot.setAllData[pin] |= pinData; 
+            robot.setAllChanged[frameNum] = true;
+            //LOG.debug("set_all Data updated: {}", bytesToString(intToByteArray(setAllData)));
+    }
+
+// 5 pins per frame,  5 frames,  25 "pins"
+function getFrameNumberFromPin(pin) {
+  if (pin < 5)
+    return 0;
+  if (pin < 10)
+    return 1;
+  if (pin < 15)
+    return 2;
+  if (pin < 20)
+    return 3;
+  if (pin < 25)
+    return 4;  
+}
+
+// Writes the given bit with the specified value to myData
+function writeBit (myData,  bit,  value) {
+    if (value == 1) 
+        myData |= 1 << bit;
+    else if (value == 0)
+        myData &= ~(1 << bit);
+    //LOG.debug("writeBit debug: {}", myData);
+    return myData;
 }
 
 /**

@@ -188,7 +188,7 @@ Robot.prototype.initialize = function() {
   }
 
   //Robot state arrays
-  //this.initializeDataArrays();
+  this.initializeDataArrays();
   this.isConnected = true;
   this.userDisconnected = false;
   //this.isReconnecting = false; //uncomment for autoreconnect
@@ -213,6 +213,11 @@ Robot.prototype.initialize = function() {
  */
 Robot.prototype.initializeDataArrays = function() {
   this.setAllData = Uint8Array(100).fill(0);
+
+  var this.setAllChanged = [];
+  for (var i = 0; i < 5; i++) {
+    this.setAllChanged.push(false);
+  }
 }
 
 /**
@@ -343,115 +348,64 @@ Robot.prototype.write = function(data) {
 }
 
 /**
- * Robot.prototype.sendSetAll - Send the next state to the robot if it differs
+ * Robot.prototype.sendSetAll - Send the next command state to the robot if it differs
  * from the current state. Called periodically (ever SET_ALL_INTERVAL ms) with
  * a setInterval set up in the initializer (setAllInterval).
  */
 Robot.prototype.sendSetAll = function() {
-  if (this.isA(Robot.ofType.GLOWBOARD)) {
-    console.log("setall")
-    if (this.setAllData.isNew) {
-      const data = this.setAllData.getSendable();
+    console.log("sendSetAll():")
+    const data = this.setAllData;
+    var timeout;
+    var counter = 1;
 
-      console.log("sending setDim " + data.slice(0,20))
+    if (this.setAllChanged[0]) {
+      console.log("Frame 0 writing to MB:");
+      console.log(data.slice(0,20));
       this.write(data.slice(0,20))
+      this.setAllChanged[0] = false;
+    }
+    timeout =  MIN_SET_ALL_INTERVAL*counter++/5;
+
+    if (this.setAllChanged[1]) {  
       setTimeout(function() {
-        console.log("sending setRed " + data.slice(20,40))
+        console.log("Frame 1 writing to MB:");
+        console.log(data.slice(20,40));        
         this.write(data.slice(20,40))
-      }.bind(this), MIN_SET_ALL_INTERVAL/4)
+        this.setAllChanged[1] = false;
+      }.bind(this), timeout)
+      timeout =  MIN_SET_ALL_INTERVAL*counter++/5;      
+    }
+
+    if (this.setAllChanged[2]) {  
       setTimeout(function() {
-        console.log("sending setGreen " + data.slice(40,60))
+        console.log("Frame 2 writing to MB:");
+        console.log(data.slice(40,60));
         this.write(data.slice(40,60))
-      }.bind(this), MIN_SET_ALL_INTERVAL/2)
+        this.setAllChanged[2] = false;
+      }.bind(this), timeout)
+      timeout =  MIN_SET_ALL_INTERVAL*counter++/5;
+    }
+
+    if (this.setAllChanged[3]) {
       setTimeout(function() {
-        console.log("sending setBlue " + data.slice(60,80))
+        console.log("Frame 3 writing to MB:");
+        console.log(data.slice(60,80));
         this.write(data.slice(60,80))
-      }.bind(this), MIN_SET_ALL_INTERVAL*3/4)
+        this.setAllChanged[3] = false;
+      }.bind(this), timeout)
+      timeout =  MIN_SET_ALL_INTERVAL*counter++/5;
     }
 
-    return
-  }
-  //var setAllChanged = !Robot.dataIsEqual(this.setAllData, this.oldSetAllData);
 
-  //console.log("sendSetAll " + setAllChanged + " " + this.setAllData + " " + this.oldSetAllData);
-  //if (setAllChanged) {
-  if (this.setAllData.isNew) {
-    //const data = this.setAllData.slice();
-    const data = this.setAllData.getSendable();
-    this.clearBuzzerBytes();
-    //this.oldSetAllData = this.setAllData.slice();
-    this.write(data);
-  }
-
-  //in another half cycle, check to see if the other data needs to be sent
-  setTimeout(function() {
-    //const ledArrayChanged = !Robot.dataIsEqual(this.ledDisplayData, this.oldLedDisplayData);
-
-    if (this.isA(Robot.ofType.FINCH)) {
-      let symbolSet = false
-      let flashSet = false
-      let ledArray = [];
-
-      //if (ledArrayChanged) {
-      if (this.ledDisplayData.isNew) {
-        symbolSet = (this.ledDisplayData.values[1] == 0x80)
-        //if (!symbolSet) { flashSet = true; }
-        if (!symbolSet) { flashSet = (this.ledDisplayData.values[1] != 0) }
-        //console.log("Found new led display data. Symbol? " + symbolSet + " flash? " + flashSet);
-        ledArray = Array.prototype.slice.call(this.ledDisplayData.getSendable(flashSet), 2);
-      }
-      //const motorsChanged = !Robot.dataIsEqual(this.motorsData, this.oldMotorsData);
-      //TODO: when should this be done?
-      //this.oldLedDisplayData = this.ledDisplayData.slice();
-      //this.oldMotorsData = this.motorsData.slice();
-
-      let motorArray = []
-      /*if (motorsChanged) {
-        motorArray = Array.prototype.slice.call(this.motorsData);
-        this.motorsData = FINCH_INITIAL_MOTOR_ARRAY.slice();
-      }*/
-      const motorsChanged = this.motorsData.isNew;
-      if (motorsChanged) {
-        motorArray = Array.prototype.slice.call(this.motorsData.getSendable(true));
-        //this.motorsData.update(0, FINCH_INITIAL_MOTOR_ARRAY);
-      }
-
-      let mode = 0x00
-      if (motorsChanged && flashSet) {
-          mode = 0x80 + this.ledDisplayData.length - 2
-      } else if (motorsChanged && symbolSet) {
-          mode = 0x60
-      } else if (motorsChanged) {
-          mode = 0x40
-      } else if (flashSet) {
-          mode = this.ledDisplayData.length - 2
-      } else if (symbolSet) {
-          mode = 0x20
-      }
-
-      if (mode != 0) {
-        //const cmdArray = [0xD2, mode].concat(motorArray, Array.prototype.slice.call(this.ledDisplayData, 2))
-
-        const cmdArray = [0xD2, mode].concat(motorArray, ledArray);
-        //console.log("Sending " + cmdArray);
-        const command = new Uint8Array(cmdArray)
-        this.write(command);
-      }
-
-    } else {
-      /*if (ledArrayChanged) {
-        this.write(this.ledDisplayData);
-        this.oldLedDisplayData = this.ledDisplayData.slice();
-      }*/
-      if (this.ledDisplayData.isNew) {
-        const data = this.ledDisplayData.getSendable();
-        if (data[1] != 0x80 && data[1] != 0) {
-          this.ledDisplayData.reset(); //reset after flash command
-        }
-        this.write(data);
-      }
-    }
-  }.bind(this), MIN_SET_ALL_INTERVAL/2)
+    if (this.setAllChanged[4]) {
+       setTimeout(function() {
+        console.log("Frame 4 writing to MB:");
+        console.log(data.slice(80,100)); 
+        this.write(data.slice(80,100))
+        this.setAllChanged[4] = false;
+      }.bind(this), timeout)    
+     }  
+    
 }
 
 /**
@@ -858,9 +812,8 @@ Robot.prototype.getFrameNumber = function(data) {
 
 
 /**
- * Robot.prototype.receiveNotificationData - Called when the robot updates its sensor
- * data. This function will update the battery value and check the calibration
- * state
+ * Robot.prototype.receiveNotificationData - Called when a notification is received from the microbit. 
+ * This will pass on the notification data to the Snap! iframe via message.
  *
  * @param  {Uint8Array} data Incoming data
  */

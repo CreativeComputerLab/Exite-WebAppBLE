@@ -1,10 +1,16 @@
 
               var thisCommand = {
                 robot: 'A',
-                cmd: "servo",
-                port: port,
-                value: position
+                pin: pin,
+                value: value,
+                isDigital: 0,
+                isOutput: 0,
+                isServo: 0,
+                isServoPulse: 0,
+                isAnalogPeriod: 0,
+                isDigitalPulse: 0,
+                digitalPulseLevel: 0
               }
 
-              window.birdbrain.sendCommand(thisCommand);
+              window.snapMicrobit.sendCommand(thisCommand);
             
