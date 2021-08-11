@@ -24,12 +24,12 @@ function onMessage(e) {
   } else {
     // incoming command from a snap block
     let robot = getRobotByLetter(e.data.robot);
+    console.log("incoming command from a snap block");
+    console.log(e.data);
     updateSetAll(robot, e.data.pin, e.data.value, e.data.isDigital, e.data.isOutput, e.data.isServo, e.data.isServoPulse, e.data.isAnalogPeriod, e.data.isDigitalPulse, e.data.digitalPulseLevel);
 
   } 
 }
-
-
 
 function updateSetAll(robot, pin, value, isDigital, isOutput, isServo, isServoPulse, isAnalogPeriod, isDigitalPulse, digitalPulseLevel) {
        
@@ -81,14 +81,43 @@ function updateSetAll(robot, pin, value, isDigital, isOutput, isServo, isServoPu
 
                 pinData = writeBit(pinData, 31, 1);  // Fresh data bit indicator
 
+
                 //LOG.debug("Display pinData = {}", Integer.toHexString(pinData));
             }
 
             var frameNum = getFrameNumberFromPin(pin);
-            robot.setAllData[pin] |= pinData; 
+            console.log("Pin Data int = " + pinData);
+            console.log("Pin Data int hex = " + pinData.toString(16));
+            
+            pinDataArr = intToByteArray(pinData);
+            console.log("Pin Data Bytes:");
+            console.log(pinDataArr);
+
+            console.log("Frame Number = " + frameNum);
+
+            overlayPinData(robot.setAllData, pinDataArr, pin);
+
             robot.setAllChanged[frameNum] = true;
             //LOG.debug("set_all Data updated: {}", bytesToString(intToByteArray(setAllData)));
     }
+
+function byteArrayToInt(arr, pin) {
+  pin*=4;  // 4 bytes per pin
+  var byteBuff = new Uint8Array([arr[pin], arr[pin+1], arr[pin+3]]);
+  var uint32 = new Uint32Array(byteBuff);
+  // TODO - check whether reverse endian is required
+  return uint32[0];
+}
+
+function intToByteArray (num) {
+    arr = new Uint8Array([
+         (num & 0xff000000) >> 24,
+         (num & 0x00ff0000) >> 16,
+         (num & 0x0000ff00) >> 8,
+         (num & 0x000000ff)
+    ]);
+    return arr;
+}
 
 // 5 pins per frame,  5 frames,  25 "pins"
 function getFrameNumberFromPin(pin) {
@@ -103,6 +132,19 @@ function getFrameNumberFromPin(pin) {
   if (pin < 25)
     return 4;  
 }
+
+// overlay 4 byte pin data on a 100 byte Uint8 array 
+function overlayPinData(arr, subArr, pin) {
+  var frameNum = getFrameNumberFromPin(pin);
+  console.log("pin: " + pin + "  Frame Number " + frameNum);
+  var start = (frameNum * 20) + (pin % 5) * 4;
+  var stop  = start + subArr.length;
+  var j = 0;
+  var i;
+  for (i = start; i < stop; i++)
+    arr[i] = subArr[j++];
+}
+
 
 // Writes the given bit with the specified value to myData
 function writeBit (myData,  bit,  value) {

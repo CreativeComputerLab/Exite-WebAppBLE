@@ -356,14 +356,17 @@ Robot.prototype.write = function(data) {
  * a setInterval set up in the initializer (setAllInterval).
  */
 Robot.prototype.sendSetAll = function() {
-    console.log("sendSetAll():")
+    //console.log("sendSetAll():")
     const data = this.setAllData;
     var timeout;
     var counter = 1;
+    var blePacket;
 
     if (this.setAllChanged[0]) {
       console.log("Frame 0 writing to MB:");
-      console.log(data.slice(0,20));
+      blePacket = data.slice(0,20);
+      blePacket[0] = 0;
+      console.log(blePacket);
       this.write(data.slice(0,20))
       this.setAllChanged[0] = false;
     }
@@ -372,8 +375,10 @@ Robot.prototype.sendSetAll = function() {
     if (this.setAllChanged[1]) {  
       setTimeout(function() {
         console.log("Frame 1 writing to MB:");
-        console.log(data.slice(20,40));        
-        this.write(data.slice(20,40))
+        blePacket = data.slice(20,40);
+        blePacket[0] = 1;
+        console.log(blePacket);        
+        this.write(blePacket)
         this.setAllChanged[1] = false;
       }.bind(this), timeout)
       timeout =  MIN_SET_ALL_INTERVAL*counter++/5;      
@@ -382,8 +387,10 @@ Robot.prototype.sendSetAll = function() {
     if (this.setAllChanged[2]) {  
       setTimeout(function() {
         console.log("Frame 2 writing to MB:");
-        console.log(data.slice(40,60));
-        this.write(data.slice(40,60))
+        blePacket = data.slice(40,60);
+        blePacket[0] = 2;
+        console.log(blePacket);
+        this.write(blePacket)
         this.setAllChanged[2] = false;
       }.bind(this), timeout)
       timeout =  MIN_SET_ALL_INTERVAL*counter++/5;

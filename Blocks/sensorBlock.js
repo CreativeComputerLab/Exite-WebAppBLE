@@ -1,29 +1,11 @@
 
-                  if (window.birdbrain.readPinBlock === undefined) {
-                    window.birdbrain.getHBSensor = function (pin) {
-                      const distanceScaling = 117/100;
-                      const dialScaling = 100/230;
-                      const lightScaling = 100/255;
-                      const soundScaling = 200/255;
-                      const voltageScaling = 3.3/255;
-
-                      let value = window.birdbrain.sensorData[robot][port - 1];
-
-                      switch(sensor) {
-                        case "Distance (cm)":
-                          return Math.round(value * distanceScaling);
-                        case "Dial":
-                          if (value > 230) { value = 230; }
-                          return Math.round(value * dialScaling);
-                        case "Light":
-                          return Math.round(value * lightScaling);
-                        case "Sound":
-                          return Math.round(value * soundScaling);
-                        case "Other (V)":
-                          return Math.round(value * voltageScaling * 100) / 100;
-                      }
+                  if (window.snapMicrobit.readPinBlock === undefined) {
+                    window.snapMicrobit.readPinBlock = function (pin) {
+                      let robot = "A";
+                      // TODO  Check for first read here
+                      //  isFirstRead()....
+                      return window.snapMicrobit.notificationData[robot][pin] & 0xFFFF
                     }
                   }
 
-                  return window.birdbrain.readPinBlock(pin);
-                
+                  return window.snapMicrobit.readPinBlock(pin);
