@@ -365,9 +365,11 @@ Robot.prototype.sendSetAll = function() {
     if (this.setAllChanged[0]) {
       console.log("Frame 0 writing to MB:");
       blePacket = data.slice(0,20);
+      // zero out the array
+      this.setAllChanged.fill(0,0,20);      
       blePacket[0] = 0;
       console.log(blePacket);
-      this.write(data.slice(0,20))
+      this.write(data.slice(0,20));  // Send via BLE     
       this.setAllChanged[0] = false;
     }
     timeout =  MIN_SET_ALL_INTERVAL*counter++/5;
@@ -376,9 +378,11 @@ Robot.prototype.sendSetAll = function() {
       setTimeout(function() {
         console.log("Frame 1 writing to MB:");
         blePacket = data.slice(20,40);
+        // zero out the array
+        this.setAllChanged.fill(0,20,40);        
         blePacket[0] = 1;
         console.log(blePacket);        
-        this.write(blePacket)
+        this.write(blePacket);  // Send via BLE
         this.setAllChanged[1] = false;
       }.bind(this), timeout)
       timeout =  MIN_SET_ALL_INTERVAL*counter++/5;      
@@ -388,19 +392,26 @@ Robot.prototype.sendSetAll = function() {
       setTimeout(function() {
         console.log("Frame 2 writing to MB:");
         blePacket = data.slice(40,60);
+        // zero out the array
+        this.setAllChanged.fill(0,40,60);        
         blePacket[0] = 2;
         console.log(blePacket);
-        this.write(blePacket)
+        this.write(blePacket);  // Send via BLE
         this.setAllChanged[2] = false;
       }.bind(this), timeout)
       timeout =  MIN_SET_ALL_INTERVAL*counter++/5;
     }
 
+    // TODO BLE packets for frames 3 and 4
     if (this.setAllChanged[3]) {
       setTimeout(function() {
         console.log("Frame 3 writing to MB:");
-        console.log(data.slice(60,80));
-        this.write(data.slice(60,80))
+        blePacket = data.slice(60,80);
+        // zero out the array
+        this.setAllChanged.fill(0,60,80);        
+        blePacket[0] = 3;
+        console.log(blePacket);
+        this.write(blePacket);  // Send via BLE
         this.setAllChanged[3] = false;
       }.bind(this), timeout)
       timeout =  MIN_SET_ALL_INTERVAL*counter++/5;
@@ -410,8 +421,12 @@ Robot.prototype.sendSetAll = function() {
     if (this.setAllChanged[4]) {
        setTimeout(function() {
         console.log("Frame 4 writing to MB:");
-        console.log(data.slice(80,100)); 
-        this.write(data.slice(80,100))
+        blePacket = data.slice(80,100);
+        // zero out the array
+        this.setAllChanged.fill(0,80,100);        
+        blePacket[0] = 4;
+        console.log(blePacket);
+        this.write(blePacket);  // Send via BLE
         this.setAllChanged[4] = false;
       }.bind(this), timeout)    
      }  
