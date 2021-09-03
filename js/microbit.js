@@ -14,7 +14,7 @@ const FINCH_TICKS_PER_DEGREE = 4.335;
 //This array tells the motors to keep doing what they are doing
 const FINCH_INITIAL_MOTOR_ARRAY = [0, 0, 0, 1, 0, 0, 0, 1];
 
-const FRAME_NUMBER_MASK = 0x7;  // bits 26-24 - This is the frame number of the third byte in the 20 byte xfer
+const FRAME_NUMBER_MASK = 0x70;  // bits 30-28 - This is the frame number of the first byte in the 20 byte xfer
 
 /**
  * Robot - Initializer called when a new robot is connected.
@@ -860,7 +860,7 @@ Robot.prototype.startCalibration = function() {
  *         byte 3 contains the frame number due to different endianness
  */
 Robot.prototype.getFrameNumber = function(data) {
-  return (data[3] & FRAME_NUMBER_MASK);
+  return (data[0] & FRAME_NUMBER_MASK);
 }
 
 
@@ -878,14 +878,14 @@ Robot.prototype.receiveNotificationData = function(data) {
     return
   }
 
-  var frameNumber = this.getFrameNumber(data); // Note  frame number is acquired BEFORE the reverse endian operation
   console.log("Incoming notification data:");
   console.log(data);
-  console.log("Frame number = " + frameNumber);
   //this.currentNotificationData = data
   Robot.reverseEndianBytes(data, 20);
   console.log("Reverse Endian notification data:");
   console.log(data);
+  var frameNumber = this.getFrameNumber(data) >> 4; 
+  console.log("Frame number = " + frameNumber);
   sendMessage({
     robot: this.devLetter,
     robotType: this.type,
