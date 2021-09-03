@@ -256,8 +256,9 @@ function onConnectionComplete(robot) {
     return;
   }
 
-  console.log("Connection to " + robot.fancyName + " complete. Starting sensor polling.")
-  robot.initialize()
+  robot.initialize();
+  console.log("Connection to " + robot.fancyName + " complete. Starting sensor polling.");
+  robot.startNotifications();
 
   closeErrorModal()
 
