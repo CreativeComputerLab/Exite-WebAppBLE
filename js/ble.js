@@ -231,7 +231,7 @@ function connectTXToRobot(robot, svc, chr) {
             SetAllData[3] = 2;
             SetAllData[4] = 1;   
 
-            robot.TX.writeValue(SetAllData);  
+            //robot.TX.writeValue(SetAllData);  
                       
           }
         })
