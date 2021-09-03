@@ -241,6 +241,16 @@ Robot.prototype.startSetAll = function() {
   */
 }
 
+
+Robot.prototype.startNotifications = function() {
+  // Send 20 bytes of 0xFF  to designate the start of notifications
+  var startNotificationPacket = new Uint8Array(20).fill(255); 
+  console.log("Sending notification start packet:");
+  console.log(startNotificationPacket); 
+  this.write(startNotificationPacket);  // Send via BLE 
+}
+
+
 /**
  * Robot.prototype.increaseSetAllInterval - Increase the interval in which
  * data is sent to the robot and restart the timer.
@@ -278,7 +288,7 @@ Robot.prototype.setDisconnected = function() {
  * list.
  */
 Robot.prototype.userDisconnect = function() {
-  //console.log("User disconnected " + this.fancyName)
+  console.log("User disconnected " + this.fancyName)
   //var index = robots.indexOf(this);
   //if (index !== -1) robots.splice(index, 1);
   this.userDisconnected = true;
@@ -366,10 +376,13 @@ Robot.prototype.sendSetAll = function() {
       console.log("Frame 0 writing to MB:");
       blePacket = data.slice(0,20);
       // zero out the array
-      this.setAllChanged.fill(0,0,20);      
+      this.setAllData.fill(0,0,20);      
       blePacket[0] = 0;
       console.log(blePacket);
-      this.write(data.slice(0,20));  // Send via BLE     
+      Robot.reverseEndianBytes(blePacket, 20);
+      console.log("after reverse endian:");
+      console.log(blePacket);
+      this.write(blePacket);  // Send via BLE     
       this.setAllChanged[0] = false;
     }
     timeout =  MIN_SET_ALL_INTERVAL*counter++/5;
@@ -379,9 +392,12 @@ Robot.prototype.sendSetAll = function() {
         console.log("Frame 1 writing to MB:");
         blePacket = data.slice(20,40);
         // zero out the array
-        this.setAllChanged.fill(0,20,40);        
+        this.setAllData.fill(0,20,40);        
         blePacket[0] = 1;
-        console.log(blePacket);        
+        console.log(blePacket); 
+        Robot.reverseEndianBytes(blePacket, 20);
+        console.log("after reverse endian:");  
+        console.log(blePacket);             
         this.write(blePacket);  // Send via BLE
         this.setAllChanged[1] = false;
       }.bind(this), timeout)
@@ -393,10 +409,13 @@ Robot.prototype.sendSetAll = function() {
         console.log("Frame 2 writing to MB:");
         blePacket = data.slice(40,60);
         // zero out the array
-        this.setAllChanged.fill(0,40,60);        
+        this.setAllData.fill(0,40,60);        
         blePacket[0] = 2;
         console.log(blePacket);
-        this.write(blePacket);  // Send via BLE
+        Robot.reverseEndianBytes(blePacket, 20);
+        console.log("after reverse endian:");  
+        console.log(blePacket);             
+        this.write(blePacket);  // Send via BLE       
         this.setAllChanged[2] = false;
       }.bind(this), timeout)
       timeout =  MIN_SET_ALL_INTERVAL*counter++/5;
@@ -408,8 +427,11 @@ Robot.prototype.sendSetAll = function() {
         console.log("Frame 3 writing to MB:");
         blePacket = data.slice(60,80);
         // zero out the array
-        this.setAllChanged.fill(0,60,80);        
+        this.setAllData.fill(0,60,80);        
         blePacket[0] = 3;
+        console.log(blePacket);
+        Robot.reverseEndianBytes(blePacket, 20);
+        console.log("after reverse endian:");  
         console.log(blePacket);
         this.write(blePacket);  // Send via BLE
         this.setAllChanged[3] = false;
@@ -423,9 +445,12 @@ Robot.prototype.sendSetAll = function() {
         console.log("Frame 4 writing to MB:");
         blePacket = data.slice(80,100);
         // zero out the array
-        this.setAllChanged.fill(0,80,100);        
+        this.setAllData.fill(0,80,100);        
         blePacket[0] = 4;
         console.log(blePacket);
+        Robot.reverseEndianBytes(blePacket, 20);
+        console.log("after reverse endian:");  
+        console.log(blePacket);        
         this.write(blePacket);  // Send via BLE
         this.setAllChanged[4] = false;
       }.bind(this), timeout)    
@@ -795,7 +820,8 @@ Robot.prototype.setPrint = function(printChars) {
  */
 Robot.prototype.stopAll = function() {
   if (this.printTimer !== null) { clearTimeout(this.printTimer); }
-  this.write(Robot.propertiesFor[this.type].stopCommand);
+  console.log("Sending stopAll command")
+  //this.write(Robot.propertiesFor[this.type].stopCommand);
   //this.initializeDataArrays();
 }
 
@@ -809,7 +835,8 @@ Robot.prototype.resetEncoders = function() {
     return
   }
 
-  this.write(new Uint8Array([0xD5]));
+  console.log("Reset encoders")
+  //this.write(new Uint8Array([0xD5]));
 }
 
 /**
@@ -817,7 +844,8 @@ Robot.prototype.resetEncoders = function() {
  * magnetometer calibration. (required for magnetometer and compass blocks)
  */
 Robot.prototype.startCalibration = function() {
-  this.write(Robot.propertiesFor[this.type].calibrationCommand);
+  console.log("StartCalibration:");
+  //this.write(Robot.propertiesFor[this.type].calibrationCommand);
   //It takes a bit for the robot to start calibrating
   setTimeout(() => { this.isCalibrating = true; }, 500);
 }
@@ -840,7 +868,9 @@ Robot.prototype.getFrameNumber = function(data) {
  * Robot.prototype.receiveNotificationData - Called when a notification is received from the microbit. 
  * This will pass on the notification data to the Snap! iframe via message.
  *
- * @param  {Uint8Array} data Incoming data
+ * The data is converted to Big endian before here 
+
+ * @param  {Uint8Array} data Incoming data (in little endian format from micro:bit)
  */
 Robot.prototype.receiveNotificationData = function(data) {
   if (!this.isInitialized) {
@@ -848,10 +878,14 @@ Robot.prototype.receiveNotificationData = function(data) {
     return
   }
 
-  var frameNumber = this.getFrameNumber(data);
-  //console.log("Frame number = " + frameNumber);
+  var frameNumber = this.getFrameNumber(data); // Note  frame number is acquired BEFORE the reverse endian operation
+  console.log("Incoming notification data:");
+  console.log(data);
+  console.log("Frame number = " + frameNumber);
   //this.currentNotificationData = data
-  //console.log(data)
+  Robot.reverseEndianBytes(data, 20);
+  console.log("Reverse Endian notification data:");
+  console.log(data);
   sendMessage({
     robot: this.devLetter,
     robotType: this.type,
@@ -865,4 +899,16 @@ Robot.prototype.receiveNotificationData = function(data) {
     this.sendSetAll();
 
 
+}
+
+Robot.reverseEndianBytes = function(bytes, len) {
+  var holder;
+    for (var i = 0; i<len; i+=4) {
+        holder = bytes[i];
+        bytes[i] = bytes[i+3];
+        bytes[i+3] = holder;
+        holder = bytes[i+1];
+        bytes[i+1] = bytes[i+2];
+        bytes[i+2] = holder;
+    }
 }
