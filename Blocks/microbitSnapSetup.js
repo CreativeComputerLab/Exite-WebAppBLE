@@ -11,13 +11,13 @@
                     //console.log("setting up message channel")
                     window.snapMicrobit.messageChannel = new MessageChannel();
                     window.snapMicrobit.messageChannel.port1.onmessage = function (e) {
-                        //console.log("Got a message: ");
-                        //console.log(e.data);
+                        console.log("Snap: Got a message: ");
+                        console.log(e.data);
                         if (e.data.newNotificationData != null && e.data.robot != null) {
                           let robot = e.data.robot;
                           overlaySubArray(window.snapMicrobit.notificationData[robot], e.data.newNotificationData, e.data.frameNumber);
-                          //console.log("New Notification Data for pin " + e.data.pin);
-                          //console.log(window.snapMicrobit.notificationData[robot]);
+                          console.log("New Notification Data for pin " + e.data.pin);
+                          console.log(window.snapMicrobit.notificationData[robot]);
                           window.snapMicrobit.robotType[robot] = e.data.robotType;
                           window.snapMicrobit.microbitIsV2[robot] = e.data.hasV2Microbit;
                         }
@@ -124,6 +124,7 @@
                     window.snapMicrobit.isFirstRead  = function (robot, pin, mode, isInput, isAnalogPeriod, isDigitalPulse, digitalPulseLevel) {
                       var firstRead = false;
                       var pinVal = pinToInt(robot, pin);
+                      console.log("Value of pin: " + pin + " " + pinVal.toString(16));
                       firstRead = ((isDigitalPin(pinVal) && (mode == 0)) || ((!isDigitalPin(pinVal)) && (mode == 1)) 
                                                || (isInputPin(pinVal) && (isInput == 0)) || (!isInputPin(pinVal) && (isInput == 1))
                                                || (isAnalogPeriodPin(pinVal) && (isAnalogPeriod == 0)) || (!isAnalogPeriodPin(pinVal) && (isAnalogPeriod == 1)) 
