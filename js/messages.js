@@ -11,6 +11,7 @@ var messagePort;
  * @param  {Object} e Message event.
  */
 function onMessage(e) {
+  console.log("message.js incoming message");
   console.log(e.data);
 
   if (e.ports[0] != undefined) {
@@ -26,12 +27,12 @@ function onMessage(e) {
     let robot = getRobotByLetter(e.data.robot);
     console.log("incoming command from a snap block");
     console.log(e.data);
-    updateSetAll(robot, e.data.pin, e.data.value, e.data.isDigital, e.data.isOutput, e.data.isServo, e.data.isServoPulse, e.data.isAnalogPeriod, e.data.isDigitalPulse, e.data.digitalPulseLevel);
+    updateSetAll(robot, e.data.pin, e.data.value, e.data.isDigital, e.data.isInput, e.data.isServo, e.data.isServoPulse, e.data.isAnalogPeriod, e.data.isDigitalPulse, e.data.digitalPulseLevel);
 
   } 
 }
 
-function updateSetAll(robot, pin, value, isDigital, isOutput, isServo, isServoPulse, isAnalogPeriod, isDigitalPulse, digitalPulseLevel) {
+function updateSetAll(robot, pin, value, isDigital, isInput, isServo, isServoPulse, isAnalogPeriod, isDigitalPulse, digitalPulseLevel) {
        
             var pinData = 0;
 
@@ -40,7 +41,7 @@ function updateSetAll(robot, pin, value, isDigital, isOutput, isServo, isServoPu
 
                 // Set the bit(s) to determine the type of the pin
                 pinData = writeBit(pinData, 16, isDigital);  // The 16th bit contains the A or D mode
-                pinData = writeBit(pinData, 17, isOutput);  // The 17th bit contains the input/output status
+                pinData = writeBit(pinData, 17, isInput);  // The 17th bit contains the input/output status
                 pinData = writeBit(pinData, 18, isServo);     
                 pinData = writeBit(pinData, 19, isServoPulse);      
                 pinData = writeBit(pinData, 20, isAnalogPeriod);      

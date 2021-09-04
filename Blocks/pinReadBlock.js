@@ -3,9 +3,14 @@
                     window.snapMicrobit.readPinBlock = function (pin) {
                       let robot = "A";
                       var isDigital, isInput, isServo, isServoPulse, isAnalogPeriod, isDigitalPulse, digitalPulseLevel;
-                      isDigital = isInput = isServo = isServoPulse = isAnalogPeriod = isDigitalPulse = digitalPulseLevel= 0;                      
-                      // TODO  Check for first read here
-                      //  isFirstRead()....
+                      isDigital = isInput = isServo = isServoPulse = isAnalogPeriod = isDigitalPulse = digitalPulseLevel= 0; 
+
+                      // Set Pin Config Here:
+                      // Analog Pin, is an output:
+                      isInput = 1;  // a pin read is an input pin  i.e input voltage to the micro:bit
+                      isDigital = 0;
+
+                      // Check for first read here
                       if (window.snapMicrobit.isFirstRead(robot, pin, isDigital, isInput, isAnalogPeriod, isDigitalPulse, digitalPulseLevel))
                       {
                           //isDigital=0 and isOutput=1 means this is an analog read pin.
@@ -14,7 +19,7 @@
                             pin: pin,
                             value: 0, // No value necessary, setting pin state
                             isDigital: 0,
-                            isOutput: 1,
+                            isInput: isInput,
                             isServo: 0,
                             isServoPulse: 0,
                             isAnalogPeriod: 0,
@@ -24,8 +29,11 @@
                             window.snapMicrobit.sendCommand(thisCommand);
                             return -1;
                       }
-                      else
-                        return window.snapMicrobit.notificationData[robot][pin] & 0xFFFF
+                      else {
+                        var pinVal = window.snapMicrobit.pinToInt(robot, pin);
+                        //return window.snapMicrobit.notificationData[robot][pin] & 0xFFFF
+                        return pinVal & 0xFFFF
+                      }
                     }
                   }
 

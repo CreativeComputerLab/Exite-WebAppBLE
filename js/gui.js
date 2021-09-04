@@ -266,7 +266,7 @@ function loadIDE(filename) {
     if (r.isA(Robot.ofType.FINCH)) {
       projectName = "PWAFinchSingleDevice";
     } else {
-      projectName = "microbitTestProjectBLE";
+      projectName = "microbitTestProjectBLE2";
     }
   } else {
     if (allRobotsAreFinches()) {
