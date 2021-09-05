@@ -11,8 +11,8 @@ var messagePort;
  * @param  {Object} e Message event.
  */
 function onMessage(e) {
-  console.log("message.js incoming message");
-  console.log(e.data);
+  //console.log("message.js incoming message");
+  //console.log(e.data);
 
   if (e.ports[0] != undefined) {
     //This message sets up the message port so that the app can send updates.
@@ -25,8 +25,8 @@ function onMessage(e) {
   } else {
     // incoming command from a snap block
     let robot = getRobotByLetter(e.data.robot);
-    console.log("incoming command from a snap block");
-    console.log(e.data);
+    //console.log("incoming command from a snap block");
+    //console.log(e.data);
     updateSetAll(robot, e.data.pin, e.data.value, e.data.isDigital, e.data.isInput, e.data.isServo, e.data.isServoPulse, e.data.isAnalogPeriod, e.data.isDigitalPulse, e.data.digitalPulseLevel);
 
   } 
@@ -87,14 +87,14 @@ function updateSetAll(robot, pin, value, isDigital, isInput, isServo, isServoPul
             }
 
             var frameNum = getFrameNumberFromPin(pin);
-            console.log("Pin Data int = " + pinData);
-            console.log("Pin Data int hex = " + pinData.toString(16));
+            //console.log("Pin Data int = " + pinData);
+            //console.log("Pin Data int hex = " + pinData.toString(16));
             
             pinDataArr = intToByteArray(pinData);
-            console.log("Pin Data Bytes:");
-            console.log(pinDataArr);
+            //console.log("Pin Data Bytes:");
+            //console.log(pinDataArr);
 
-            console.log("Frame Number = " + frameNum);
+            //console.log("Frame Number = " + frameNum);
 
             overlayPinData(robot.setAllData, pinDataArr, pin);
 
@@ -137,7 +137,7 @@ function getFrameNumberFromPin(pin) {
 // overlay 4 byte pin data on a 100 byte Uint8 array 
 function overlayPinData(arr, subArr, pin) {
   var frameNum = getFrameNumberFromPin(pin);
-  console.log("pin: " + pin + "  Frame Number " + frameNum);
+  //console.log("pin: " + pin + "  Frame Number " + frameNum);
   var start = (frameNum * 20) + (pin % 5) * 4;
   var stop  = start + subArr.length;
   var j = 0;

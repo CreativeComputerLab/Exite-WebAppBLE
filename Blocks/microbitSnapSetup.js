@@ -11,14 +11,14 @@
                     //console.log("setting up message channel")
                     window.snapMicrobit.messageChannel = new MessageChannel();
                     window.snapMicrobit.messageChannel.port1.onmessage = function (e) {
-                        console.log("Snap: Got a message: ");
-                        console.log(e);
-                        console.log(e.data);
+                        //console.log("Snap: Got a message: ");
+                        //console.log(e);
+                        //console.log(e.data);
                         if (e.data.newNotificationData != null && e.data.robot != null) {
                           let robot = e.data.robot;
                           overlaySubArray(window.snapMicrobit.notificationData[robot], e.data.newNotificationData, e.data.frameNumber);
-                          console.log("New Notification Data for pin " + e.data.pin);
-                          console.log(window.snapMicrobit.notificationData[robot]);
+                          //console.log("New Notification Data for pin " + e.data.pin);
+                          //console.log(window.snapMicrobit.notificationData[robot]);
                           window.snapMicrobit.robotType[robot] = e.data.robotType;
                           window.snapMicrobit.microbitIsV2[robot] = e.data.hasV2Microbit;
                         }
@@ -90,8 +90,8 @@
 
                     function isInputPin ( pinData) {
                         // THis is little endian
-                        console.log("isInputPin: input =  " + pinData.toString(16));
-                        console.log(pinData & 0x20000);
+                        //console.log("isInputPin: input =  " + pinData.toString(16));
+                        //console.log(pinData & 0x20000);
                         return (pinData & 0x20000) == 0x20000; // bit 17  0x20000
                     }
 
@@ -118,12 +118,12 @@
 
                     window.snapMicrobit.pinToInt = function(robot, pin) {
                       pin*=4;  // 4 bytes per pin
-                      console.log(window.snapMicrobit.notificationData[robot]);
-                      console.log(window.snapMicrobit.notificationData[robot][pin] +"  " + window.snapMicrobit.notificationData[robot][pin+1]+"  " + window.snapMicrobit.notificationData[robot][pin+2] +"  " + window.snapMicrobit.notificationData[robot][pin+3]);
+                      //console.log(window.snapMicrobit.notificationData[robot]);
+                      //console.log(window.snapMicrobit.notificationData[robot][pin] +"  " + window.snapMicrobit.notificationData[robot][pin+1]+"  " + window.snapMicrobit.notificationData[robot][pin+2] +"  " + window.snapMicrobit.notificationData[robot][pin+3]);
                       var byteBuff = new Uint8Array([window.snapMicrobit.notificationData[robot][pin], window.snapMicrobit.notificationData[robot][pin+1], window.snapMicrobit.notificationData[robot][pin+2], window.snapMicrobit.notificationData[robot][pin+3]]);
                       var dataview = new DataView(byteBuff.buffer);
                       var returnVal= dataview.getUint32(0);
-                      console.log(returnVal);
+                      //console.log(returnVal);
                       /*
                       var uint32 = new Uint32Array(byteBuff);
                       console.log("pinToInt: pin="+pin+ "  robot="+robot);
@@ -139,8 +139,8 @@
                       var firstRead = false;
                       //console.log("isFirstRead() input pin = 0x" + pin.toString(16));
                       var pinVal = window.snapMicrobit.pinToInt(robot, pin);
-                      console.log("IsInputPin is 0x" + isInputPin(pinVal));
-                      console.log("Value of pin: " + pin + ": 0x" + pinVal.toString(16));
+                      //console.log("IsInputPin is 0x" + isInputPin(pinVal));
+                      //console.log("Value of pin: " + pin + ": 0x" + pinVal.toString(16));
                       firstRead = ((isDigitalPin(pinVal) && (mode == 0)) || ((!isDigitalPin(pinVal)) && (mode == 1)) 
                                                || (isInputPin(pinVal) && (isInput == 0)) || (!isInputPin(pinVal) && (isInput == 1))
                                                || (isAnalogPeriodPin(pinVal) && (isAnalogPeriod == 0)) || (!isAnalogPeriodPin(pinVal) && (isAnalogPeriod == 1)) 
@@ -148,7 +148,7 @@
                                                || (isDigitalPulseHigh(pinVal) && (digitalPulseLevel == 0)) || (!isDigitalPulseHigh(pinVal) && (digitalPulseLevel == 1))            
                                               ); 
                       console.log("FirstRead returns " + firstRead);
-                      console.log("pin int: " + pinVal);                      
+                      //console.log("pin int: " + pinVal);                      
                       return firstRead;
                     }
                   }  // end of setupSnapMicrobit
@@ -157,7 +157,7 @@
 //window.snapMicrobit = undefined;
 
                   let currentVersion = 1
-                  console.log("BirdBrain ready to set up");
+                  //console.log("BirdBrain ready to set up");
                   if (window.snapMicrobit === undefined ||
                     window.snapMicrobit.version === undefined ||
                     window.snapMicrobit.version < currentVersion) {
@@ -165,6 +165,6 @@
                     setupSnapMicrobit()
                     window.snapMicrobit.version = currentVersion
                   } else {
-                    console.log("BirdBrain already set up");
+                    //console.log("BirdBrain already set up");
                   }
                 

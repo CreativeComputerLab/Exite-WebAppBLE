@@ -350,8 +350,8 @@ Robot.prototype.write = function(data) {
   }
 
   this.writeMethod.call(this.TX, data).then(_ => {
-      console.log('Wrote to ' + this.fancyName + ":");
-      console.log(data);
+      //console.log('Wrote to ' + this.fancyName + ":");
+      //console.log(data);
       this.writeInProgress = false;
     }).catch(error => {
       console.error("Error writing to " + this.fancyName + ": " + error);
@@ -373,15 +373,15 @@ Robot.prototype.sendSetAll = function() {
     var blePacket;
 
     if (this.setAllChanged[0]) {
-      console.log("Frame 0 writing to MB:");
+      //console.log("Frame 0 writing to MB:");
       blePacket = data.slice(0,20);
       // zero out the array
       this.setAllData.fill(0,0,20);      
       blePacket[0] = 0;
-      console.log(blePacket);
+      //console.log(blePacket);
       Robot.reverseEndianBytes(blePacket, 20);
-      console.log("after reverse endian:");
-      console.log(blePacket);
+      //console.log("after reverse endian:");
+      //console.log(blePacket);
       this.write(blePacket);  // Send via BLE     
       this.setAllChanged[0] = false;
     }
@@ -389,15 +389,15 @@ Robot.prototype.sendSetAll = function() {
 
     if (this.setAllChanged[1]) {  
       setTimeout(function() {
-        console.log("Frame 1 writing to MB:");
+        //console.log("Frame 1 writing to MB:");
         blePacket = data.slice(20,40);
         // zero out the array
         this.setAllData.fill(0,20,40);        
         blePacket[0] = 1;
-        console.log(blePacket); 
+        //console.log(blePacket); 
         Robot.reverseEndianBytes(blePacket, 20);
-        console.log("after reverse endian:");  
-        console.log(blePacket);             
+        //console.log("after reverse endian:");  
+        //console.log(blePacket);             
         this.write(blePacket);  // Send via BLE
         this.setAllChanged[1] = false;
       }.bind(this), timeout)
@@ -406,15 +406,15 @@ Robot.prototype.sendSetAll = function() {
 
     if (this.setAllChanged[2]) {  
       setTimeout(function() {
-        console.log("Frame 2 writing to MB:");
+        //console.log("Frame 2 writing to MB:");
         blePacket = data.slice(40,60);
         // zero out the array
         this.setAllData.fill(0,40,60);        
         blePacket[0] = 2;
-        console.log(blePacket);
+        //console.log(blePacket);
         Robot.reverseEndianBytes(blePacket, 20);
-        console.log("after reverse endian:");  
-        console.log(blePacket);             
+        //console.log("after reverse endian:");  
+        //console.log(blePacket);             
         this.write(blePacket);  // Send via BLE       
         this.setAllChanged[2] = false;
       }.bind(this), timeout)
@@ -424,15 +424,15 @@ Robot.prototype.sendSetAll = function() {
     // TODO BLE packets for frames 3 and 4
     if (this.setAllChanged[3]) {
       setTimeout(function() {
-        console.log("Frame 3 writing to MB:");
+        //console.log("Frame 3 writing to MB:");
         blePacket = data.slice(60,80);
         // zero out the array
         this.setAllData.fill(0,60,80);        
         blePacket[0] = 3;
-        console.log(blePacket);
+        //console.log(blePacket);
         Robot.reverseEndianBytes(blePacket, 20);
-        console.log("after reverse endian:");  
-        console.log(blePacket);
+        //console.log("after reverse endian:");  
+        //console.log(blePacket);
         this.write(blePacket);  // Send via BLE
         this.setAllChanged[3] = false;
       }.bind(this), timeout)
@@ -442,15 +442,15 @@ Robot.prototype.sendSetAll = function() {
 
     if (this.setAllChanged[4]) {
        setTimeout(function() {
-        console.log("Frame 4 writing to MB:");
+        //console.log("Frame 4 writing to MB:");
         blePacket = data.slice(80,100);
         // zero out the array
         this.setAllData.fill(0,80,100);        
         blePacket[0] = 4;
-        console.log(blePacket);
+        //console.log(blePacket);
         Robot.reverseEndianBytes(blePacket, 20);
-        console.log("after reverse endian:");  
-        console.log(blePacket);        
+        //console.log("after reverse endian:");  
+        //console.log(blePacket);        
         this.write(blePacket);  // Send via BLE
         this.setAllChanged[4] = false;
       }.bind(this), timeout)    
@@ -878,14 +878,14 @@ Robot.prototype.receiveNotificationData = function(data) {
     return
   }
 
-  console.log("Incoming notification data:");
-  console.log(data);
+  //console.log("Incoming notification data:");
+  //console.log(data);
   //this.currentNotificationData = data
   Robot.reverseEndianBytes(data, 20);
-  console.log("Reverse Endian notification data:");
-  console.log(data);
+  //console.log("Reverse Endian notification data:");
+ //console.log(data);
   var frameNumber = this.getFrameNumber(data) >> 4; 
-  console.log("Frame number = " + frameNumber);
+  //console.log("Frame number = " + frameNumber);
   sendMessage({
     robot: this.devLetter,
     robotType: this.type,
