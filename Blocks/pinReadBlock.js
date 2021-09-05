@@ -37,5 +37,17 @@
                     }
                   }
 
-                  return window.snapMicrobit.readPinBlock(pin);
+                  // TODO  this loop below doesn't work. Need to find another way to wait for notification after first read
+
+                  var numCalls = 5;
+                  var callNum = 0;
+                  var value = -1;
+
+                  value = window.snapMicrobit.readPinBlock(pin);
+
+                  while ((value == -1) && (callNum++ < numCalls)) {
+                     value = window.snapMicrobit.readPinBlock(pin);
+                  }
+
+                  return value;
                 
