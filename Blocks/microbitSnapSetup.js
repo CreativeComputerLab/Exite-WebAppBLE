@@ -127,6 +127,16 @@
                       return dataview.getUint32(0);
                     }
 
+                    window.snapMicrobit.pinToInt32 = function(robot, pin) {
+                      pin*=4;  // 4 bytes per pin
+                      //console.log(window.snapMicrobit.notificationData[robot]);
+                      //console.log(window.snapMicrobit.notificationData[robot][pin] +"  " + window.snapMicrobit.notificationData[robot][pin+1]+"  " + window.snapMicrobit.notificationData[robot][pin+2] +"  " + window.snapMicrobit.notificationData[robot][pin+3]);
+                      var byteBuff = new Uint8Array([window.snapMicrobit.notificationData[robot][pin], window.snapMicrobit.notificationData[robot][pin+1], window.snapMicrobit.notificationData[robot][pin+2], window.snapMicrobit.notificationData[robot][pin+3]]);
+                      var dataview = new DataView(byteBuff.buffer);
+                      return dataview.getInt32(0);
+                    }
+
+
                     window.snapMicrobit.isFirstRead  = function (robot, pin, isDigital, isInput, isAnalogPeriod, isDigitalPulse, digitalPulseLevel) {
                       var firstRead = false;
                       //console.log("isFirstRead() input pin = 0x" + pin.toString(16));
