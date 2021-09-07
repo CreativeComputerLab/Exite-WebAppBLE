@@ -1,6 +1,6 @@
 
-                  if (window.snapMicrobit.readPinBlock === undefined) {
-                    window.snapMicrobit.readPinBlock = function (pin) {
+                  if (window.snapMicrobit.analogReadPinBlock === undefined) {
+                    window.snapMicrobit.analogReadPinBlock = function (pin) {
                       let robot = "A";
                       var isDigital, isInput, isServo, isServoPulse, isAnalogPeriod, isDigitalPulse, digitalPulseLevel;
                       isDigital = isInput = isServo = isServoPulse = isAnalogPeriod = isDigitalPulse = digitalPulseLevel= 0; 
@@ -8,7 +8,7 @@
                       // Set Pin Config Here:
                       // Analog Pin, is an output:
                       isInput = 1;  // a pin read is an input pin  i.e input voltage to the micro:bit
-                      isDigital = 1;
+                      isDigital = 0;
 
                       // Check for first read here
                       if (window.snapMicrobit.isFirstRead(robot, pin, isDigital, isInput, isAnalogPeriod, isDigitalPulse, digitalPulseLevel))
@@ -18,7 +18,7 @@
                             robot: robot,
                             pin: pin,
                             value: 0, // No value necessary, setting pin state
-                            isDigital: isDigial,
+                            isDigital: isDigital,
                             isInput: isInput,
                             isServo: 0,
                             isServoPulse: 0,
@@ -43,11 +43,11 @@
                   var callNum = 0;
                   var value = -1;
 
-                  value = window.snapMicrobit.readPinBlock(pin);
+                  value = window.snapMicrobit.analogReadPinBlock(pin);
 
-                  while ((value == -1) && (callNum++ < numCalls)) {
-                     value = window.snapMicrobit.readPinBlock(pin);
-                  }
+                  //while ((value == -1) && (callNum++ < numCalls)) {
+                  //   value = window.snapMicrobit.readPinBlock(pin);
+                  //}
 
                   return value;
                 

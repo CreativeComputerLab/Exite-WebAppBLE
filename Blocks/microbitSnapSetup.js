@@ -85,15 +85,15 @@
 
                     function isDigitalPin ( pinData) {
                         // THis is little endian
-                        console.log("isDigitalPin: input =  " + pinData.toString(16));
-                        console.log((pinData & 0x10000).toString(16));                        
+                        //console.log("isDigitalPin: input =  " + pinData.toString(16));
+                        //console.log((pinData & 0x10000).toString(16));                        
                         return (pinData & 0x10000) == 0x10000; // bit 16 0x10000 big endian
                     }
 
                     function isInputPin ( pinData) {
                         // THis is little endian
-                        console.log("isInputPin: input =  " + pinData.toString(16));
-                        console.log((pinData & 0x20000).toString(16));
+                        //console.log("isInputPin: input =  " + pinData.toString(16));
+                        //console.log((pinData & 0x20000).toString(16));
                         return (pinData & 0x20000) == 0x20000; // bit 17  0x20000
                     }
 
@@ -127,18 +127,18 @@
                       return dataview.getUint32(0);
                     }
 
-                    window.snapMicrobit.isFirstRead  = function (robot, pin, mode, isInput, isAnalogPeriod, isDigitalPulse, digitalPulseLevel) {
+                    window.snapMicrobit.isFirstRead  = function (robot, pin, isDigital, isInput, isAnalogPeriod, isDigitalPulse, digitalPulseLevel) {
                       var firstRead = false;
                       //console.log("isFirstRead() input pin = 0x" + pin.toString(16));
                       var pinVal = window.snapMicrobit.pinToInt(robot, pin);
-                      console.log("Value of pin: " + pin + ": 0x" + pinVal.toString(16));
-                      console.log("IsInputPin is " + isInputPin(pinVal));
-                      console.log("IsDigitalPin is " + isDigitalPin(pinVal));
-                      console.log("mode is " + mode);
-                      console.log("isInput is " + isInput);
-                      console.log((isDigitalPin(pinVal) && (mode == 0)));
-                      console.log((!isDigitalPin(pinVal)) && (mode == 1));
-                      firstRead = (               (isDigitalPin(pinVal) && (mode == 0)) || ((!isDigitalPin(pinVal)) && (mode == 1)) 
+                      //console.log("Value of pin: " + pin + ": 0x" + pinVal.toString(16));
+                      //console.log("IsInputPin is " + isInputPin(pinVal));
+                      //console.log("IsDigitalPin is " + isDigitalPin(pinVal));
+                      //console.log("isDigital is " + isDigital);
+                      //console.log("isInput is " + isInput);
+                      //console.log((isDigitalPin(pinVal) && (isDigital == 0)));
+                      //console.log((!isDigitalPin(pinVal)) && (isDigital == 1));
+                      firstRead = (               (isDigitalPin(pinVal) && (isDigital == 0)) || ((!isDigitalPin(pinVal)) && (isDigital == 1)) 
                                                || (isInputPin(pinVal) && (isInput == 0)) || (!isInputPin(pinVal) && (isInput == 1))
                                                || (isAnalogPeriodPin(pinVal) && (isAnalogPeriod == 0)) || (!isAnalogPeriodPin(pinVal) && (isAnalogPeriod == 1)) 
                                                || (isDigitalPulsePin(pinVal) && (isDigitalPulse == 0)) || (!isDigitalPulsePin(pinVal) && (isDigitalPulse == 1)) 

@@ -87,6 +87,7 @@ function updateSetAll(robot, pin, value, isDigital, isInput, isServo, isServoPul
             }
 
             var frameNum = getFrameNumberFromPin(pin);
+            //console.log("Frame Number = " + frameNum);
             //console.log("Pin Data int = " + pinData);
             //console.log("Pin Data int hex = " + pinData.toString(16));
             
@@ -94,7 +95,7 @@ function updateSetAll(robot, pin, value, isDigital, isInput, isServo, isServoPul
             //console.log("Pin Data Bytes:");
             //console.log(pinDataArr);
 
-            //console.log("Frame Number = " + frameNum);
+            
 
             overlayPinData(robot.setAllData, pinDataArr, pin);
 
