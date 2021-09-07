@@ -85,13 +85,15 @@
 
                     function isDigitalPin ( pinData) {
                         // THis is little endian
+                        console.log("isDigitalPin: input =  " + pinData.toString(16));
+                        console.log((pinData & 0x10000).toString(16));                        
                         return (pinData & 0x10000) == 0x10000; // bit 16 0x10000 big endian
                     }
 
                     function isInputPin ( pinData) {
                         // THis is little endian
-                        //console.log("isInputPin: input =  " + pinData.toString(16));
-                        //console.log(pinData & 0x20000);
+                        console.log("isInputPin: input =  " + pinData.toString(16));
+                        console.log((pinData & 0x20000).toString(16));
                         return (pinData & 0x20000) == 0x20000; // bit 17  0x20000
                     }
 
@@ -122,33 +124,27 @@
                       //console.log(window.snapMicrobit.notificationData[robot][pin] +"  " + window.snapMicrobit.notificationData[robot][pin+1]+"  " + window.snapMicrobit.notificationData[robot][pin+2] +"  " + window.snapMicrobit.notificationData[robot][pin+3]);
                       var byteBuff = new Uint8Array([window.snapMicrobit.notificationData[robot][pin], window.snapMicrobit.notificationData[robot][pin+1], window.snapMicrobit.notificationData[robot][pin+2], window.snapMicrobit.notificationData[robot][pin+3]]);
                       var dataview = new DataView(byteBuff.buffer);
-                      var returnVal= dataview.getUint32(0);
-                      //console.log(returnVal);
-                      /*
-                      var uint32 = new Uint32Array(byteBuff);
-                      console.log("pinToInt: pin="+pin+ "  robot="+robot);
-                      console.log(byteBuff);
-                      console.log(uint32);
-                      console.log(uint32[0]);
-                      */
-                      // TODO - check whether reverse endian is required
-                      return returnVal;
+                      return dataview.getUint32(0);
                     }
 
                     window.snapMicrobit.isFirstRead  = function (robot, pin, mode, isInput, isAnalogPeriod, isDigitalPulse, digitalPulseLevel) {
                       var firstRead = false;
                       //console.log("isFirstRead() input pin = 0x" + pin.toString(16));
                       var pinVal = window.snapMicrobit.pinToInt(robot, pin);
-                      //console.log("IsInputPin is 0x" + isInputPin(pinVal));
-                      //console.log("Value of pin: " + pin + ": 0x" + pinVal.toString(16));
-                      firstRead = ((isDigitalPin(pinVal) && (mode == 0)) || ((!isDigitalPin(pinVal)) && (mode == 1)) 
+                      console.log("Value of pin: " + pin + ": 0x" + pinVal.toString(16));
+                      console.log("IsInputPin is " + isInputPin(pinVal));
+                      console.log("IsDigitalPin is " + isDigitalPin(pinVal));
+                      console.log("mode is " + mode);
+                      console.log("isInput is " + isInput);
+                      console.log((isDigitalPin(pinVal) && (mode == 0)));
+                      console.log((!isDigitalPin(pinVal)) && (mode == 1));
+                      firstRead = (               (isDigitalPin(pinVal) && (mode == 0)) || ((!isDigitalPin(pinVal)) && (mode == 1)) 
                                                || (isInputPin(pinVal) && (isInput == 0)) || (!isInputPin(pinVal) && (isInput == 1))
                                                || (isAnalogPeriodPin(pinVal) && (isAnalogPeriod == 0)) || (!isAnalogPeriodPin(pinVal) && (isAnalogPeriod == 1)) 
                                                || (isDigitalPulsePin(pinVal) && (isDigitalPulse == 0)) || (!isDigitalPulsePin(pinVal) && (isDigitalPulse == 1)) 
                                                || (isDigitalPulseHigh(pinVal) && (digitalPulseLevel == 0)) || (!isDigitalPulseHigh(pinVal) && (digitalPulseLevel == 1))            
-                                              ); 
-                      console.log("FirstRead returns " + firstRead);
-                      //console.log("pin int: " + pinVal);                      
+                                  ); 
+                      console.log("FirstRead returns " + firstRead);                      
                       return firstRead;
                     }
                   }  // end of setupSnapMicrobit

@@ -18,7 +18,7 @@
                             robot: robot,
                             pin: pin,
                             value: 0, // No value necessary, setting pin state
-                            isDigital: isDigial,
+                            isDigital: isDigital,
                             isInput: isInput,
                             isServo: 0,
                             isServoPulse: 0,
@@ -45,9 +45,9 @@
 
                   value = window.snapMicrobit.readPinBlock(pin);
 
-                  while ((value == -1) && (callNum++ < numCalls)) {
-                     value = window.snapMicrobit.readPinBlock(pin);
-                  }
+                  //while ((value == -1) && (callNum++ < numCalls)) {
+                  //   value = window.snapMicrobit.readPinBlock(pin);
+                  //}
 
                   return value;
                 
