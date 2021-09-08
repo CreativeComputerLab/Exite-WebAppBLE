@@ -6,4 +6,4 @@ if (dim == 'Y')
 	pin = 18;
 if (dim == 'Z')
 	pin = 19;
-return (window.snapMicrobit.pinToInt(robot, pin) / 100) * .98;
+return Math.round((window.snapMicrobit.pinToInt32(robot, pin) / 100)) * 0.98;
