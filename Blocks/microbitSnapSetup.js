@@ -1,5 +1,6 @@
 
                   function setupSnapMicrobit() {
+                    //console.log("Setting up global vars");
                     window.snapMicrobit = {};
                     window.snapMicrobit.notificationData = {};
                     window.snapMicrobit.notificationData.A = new Uint8Array(100).fill(0);
@@ -7,6 +8,12 @@
                     window.snapMicrobit.microbitIsV2.A = false;
                     window.snapMicrobit.robotType = {};
                     window.snapMicrobit.robotType.A = 3;
+                    window.snapMicrobit.servo = {};
+                    window.snapMicrobit.servo.position = {};
+                    window.snapMicrobit.servo.rotation = {};
+                    window.snapMicrobit.servo.position.lastValue = -1;
+                    window.snapMicrobit.servo.rotation.lastValue = -101;
+
 
                     //console.log("setting up message channel")
                     window.snapMicrobit.messageChannel = new MessageChannel();
@@ -14,6 +21,8 @@
                         //console.log("Snap: Got a message: ");
                         //console.log(e);
                         //console.log(e.data);
+                        if (window.snapMicrobit.notificationData === undefined)
+                          return;
                         if (e.data.newNotificationData != null && e.data.robot != null) {
                           let robot = e.data.robot;
                           overlaySubArray(window.snapMicrobit.notificationData[robot], e.data.newNotificationData, e.data.frameNumber);
@@ -154,7 +163,7 @@
                                                || (isDigitalPulsePin(pinVal) && (isDigitalPulse == 0)) || (!isDigitalPulsePin(pinVal) && (isDigitalPulse == 1)) 
                                                || (isDigitalPulseHigh(pinVal) && (digitalPulseLevel == 0)) || (!isDigitalPulseHigh(pinVal) && (digitalPulseLevel == 1))            
                                   ); 
-                      console.log("FirstRead returns " + firstRead);                      
+                      //console.log("FirstRead returns " + firstRead);                      
                       return firstRead;
                     }
                   }  // end of setupSnapMicrobit
