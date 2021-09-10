@@ -8,11 +8,17 @@
                     window.snapMicrobit.microbitIsV2.A = false;
                     window.snapMicrobit.robotType = {};
                     window.snapMicrobit.robotType.A = 3;
-                    window.snapMicrobit.servo = {};
+                    //  TODO If multiple micro:bits are supported, then servo and led will need robot letters as above.
+                    window.snapMicrobit.servo = {};    
                     window.snapMicrobit.servo.position = {};
                     window.snapMicrobit.servo.rotation = {};
                     window.snapMicrobit.servo.position.lastValue = -1;
                     window.snapMicrobit.servo.rotation.lastValue = -101;
+                    window.snapMicrobit.led = {};
+                    window.snapMicrobit.led.enable = {};
+                    window.snapMicrobit.led.enable.lastValue = -1;
+                    window.snapMicrobit.led.matrix = {};
+                    window.snapMicrobit.led.matrix.lastValue = 0;
 
 
                     //console.log("setting up message channel")
