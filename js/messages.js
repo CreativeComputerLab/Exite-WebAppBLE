@@ -82,8 +82,14 @@ function updateSetAll(robot, pin, value, isDigital, isInput, isServo, isServoPul
 
                 pinData = writeBit(pinData, 31, 1);  // Fresh data bit indicator
 
+            } else if (pin == 20) { // Print chars in ints 20-23
 
-                //LOG.debug("Display pinData = {}", Integer.toHexString(pinData));
+
+
+            }else if (pin == 24) {  // Stop All
+              console.log("stop all");
+              pinData = 0xFFFFFFFF; 
+
             }
 
             var frameNum = getFrameNumberFromPin(pin);
@@ -135,7 +141,7 @@ function getFrameNumberFromPin(pin) {
     return 4;  
 }
 
-// overlay 4 byte pin data on a 100 byte Uint8 array 
+// overlay 20 bytes of pin data (5 pins) on a 100 byte (25 pin) Uint8 array 
 function overlayPinData(arr, subArr, pin) {
   var frameNum = getFrameNumberFromPin(pin);
   //console.log("pin: " + pin + "  Frame Number " + frameNum);
