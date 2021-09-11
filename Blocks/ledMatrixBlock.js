@@ -57,9 +57,9 @@
               //console.log("MatrixBits = 0x" + matrixBits.toString(16));
 
 
-              if (window.snapMicrobit.led.matrix.lastValue == matrixBits){
-                return;
-              }
+              //if (window.snapMicrobit.led.matrix.lastValue == matrixBits){
+                //return;
+              //}
   
               var thisCommand = {
                 robot: 'A',

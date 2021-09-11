@@ -32,6 +32,20 @@ function onMessage(e) {
   } 
 }
 
+
+function reverseEndianBytes(bytes, len) {
+  var holder;
+    for (var i = 0; i<len; i+=4) {
+        holder = bytes[i];
+        bytes[i] = bytes[i+3];
+        bytes[i+3] = holder;
+        holder = bytes[i+1];
+        bytes[i+1] = bytes[i+2];
+        bytes[i+2] = holder;
+    }
+}
+
+
 function updateSetAll(robot, pin, value, isDigital, isInput, isServo, isServoPulse, isAnalogPeriod, isDigitalPulse, digitalPulseLevel) {
        
             var pinData = 0;
@@ -83,8 +97,28 @@ function updateSetAll(robot, pin, value, isDigital, isInput, isServo, isServoPul
                 pinData = writeBit(pinData, 31, 1);  // Fresh data bit indicator
 
             } else if (pin == 20) { // Print chars in ints 20-23
+              console.log("print chars incoming value:");
+              console.log(value);
 
+              var pinDataBytes = value.slice(0,4);
+              reverseEndianBytes(pinDataBytes, 4);
+              overlayPinData(robot.setAllData, pinDataBytes, 21);
+              pinDataBytes = value.slice(4,8);
+              reverseEndianBytes(pinDataBytes, 4);
+              overlayPinData(robot.setAllData, pinDataBytes, 22);
+              pinDataBytes = value.slice(8,12);
+              reverseEndianBytes(pinDataBytes, 4);
+              overlayPinData(robot.setAllData, pinDataBytes, 23);  
+              /*            
+              pinDataBytes = value.slice(12,16);
+              overlayPinData(robot.setAllData, pinDataBytes, 23);
+              */
 
+              console.log(robot.setAllData);
+
+              var thisFrameNum = getFrameNumberFromPin(pin);
+              robot.setAllChanged[thisFrameNum] = true;
+              return;            
 
             }else if (pin == 24) {  // Stop All
               console.log("stop all");

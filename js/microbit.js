@@ -442,15 +442,15 @@ Robot.prototype.sendSetAll = function() {
 
     if (this.setAllChanged[4]) {
        setTimeout(function() {
-        //console.log("Frame 4 writing to MB:");
+        console.log("Frame 4 writing to MB:");
         blePacket = data.slice(80,100);
         // zero out the array
         this.setAllData.fill(0,80,100);        
         blePacket[0] = 4;
         //console.log(blePacket);
         Robot.reverseEndianBytes(blePacket, 20);
-        //console.log("after reverse endian:");  
-        //console.log(blePacket);        
+        console.log("after reverse endian:");  
+        console.log(blePacket);        
         this.write(blePacket);  // Send via BLE
         this.setAllChanged[4] = false;
       }.bind(this), timeout)    
