@@ -30,11 +30,11 @@ input:checked + .slider:before { -webkit-transform: translateX(26px); -ms-transf
 .bounce { display: inline-block; position: relative; -moz-animation: bounce 1s infinite linear; -o-animation: bounce 1s infinite linear; -webkit-animation: bounce 1s infinite linear; animation: bounce 1s infinite linear; }
 
 /* !core */
-body { background-color: #881199; color: #535353; font-family: 'Nunito', Helvetica, Arial, sans-serif; font-size: 16px; overflow: hidden; }
+body { background-color: #004b85; color: #535353; font-family: 'AvenirMedium', Helvetica, Arial, sans-serif; font-size: 16px; }
 h1 { font-family: 'Raleway', Helvetica, Arial, sans-serif; font-size: 28px; text-transform: uppercase; margin-top: 0; padding-top: 0; }
 
 /* !header */
-#main-header { background-color: #fff; background-image: url(../img/pattern-blue-circuitry.svg); background-position: top center; background-repeat: repeat; background-size: 561px 538px; padding: 12px 20px; position: relative; }
+#main-header { background-color: #ad263e; background-image: url(../img/pattern-blue-circuitry.svg); background-position: top center; background-repeat: repeat; background-size: 561px 538px; padding: 12px 20px; position: relative; }
 #main-header .col-xs-12 { padding-left: 0; text-align: center; }
 #birdbrain-logo { max-width: 255px; width: 80%; }
 
@@ -52,12 +52,12 @@ h1 { font-family: 'Raleway', Helvetica, Arial, sans-serif; font-size: 28px; text
 #programmingLang { font-size: 14px; position: absolute; left: 20px; top: 12px; }
 
 /* !finder + button */
-#finder {display: none; background-color: #089BAB; color: #fff; padding-top: 2em; padding-bottom: 2em; transition-delay: 0.5s; transition: all 1s ease; height: auto; }
+#finder {display: none;  background-color: #004b85; color: #fff; padding-top: 2em; padding-bottom: 2em; transition-delay: 0.5s; transition: all 1s ease; height: auto; }
 #find-button { font-family: 'Raleway', Helvetica, Arial, sans-serif; font-size: 28px; padding: 13px 40px 12px 40px; line-height: 28px; text-transform: uppercase; text-align: center; vertical-align: text-bottom; }
 #find-button span { vertical-align: text-bottom; }
 
 /* !connected/programming section */
-#connected { background-color: #881199; color: #fff; display: block; padding-top: 2em; padding-bottom: 2em; }
+#connected { background-color: #004b85; color: #fff; display: block; padding-top: 2em; padding-bottom: 2em; }
 
 /* !robot list */
 .robot-list { background-color: #fff; border-radius: 5px; color: #535353; overflow: hidden; margin: 0.5em auto 2em auto; max-width: 720px; width: 98%; display: table; padding-left: 10px; padding-right: 10px; }
@@ -159,7 +159,7 @@ h1 { font-family: 'Raleway', Helvetica, Arial, sans-serif; font-size: 28px; text
 }
 
 /* Snap iframe and collapsed robot info */
-#connected-expanded { background-color: #881199; color: #fff; position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
+#connected-expanded { background-color: #004b85; color: #fff; position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
 #connected-expanded .container { width: 100%; padding-top: 6px; }
 #logo-section { padding-left: 24px; }
 #hummingbird-only-logo { margin-top: 4px; height: 54px; width: auto; }
