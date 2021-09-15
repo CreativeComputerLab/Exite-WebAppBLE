@@ -24,7 +24,10 @@ const FRAME_NUMBER_MASK = 0x70;  // bits 30-28 - This is the frame number of the
 function Robot(device) {
   this.device = device;
   this.devLetter = "A";  // Support one device for now...
-  this.fancyName = getDeviceFancyName(device.name);
+//  if (!device.name == null)
+    this.fancyName = getDeviceFancyName(device.name);
+//  else
+//    this.fancyName = "Excite Low Cost Kit";
   this.batteryLevel = Robot.batteryLevel.UNKNOWN
   this.RX = null; //receiving
   this.TX = null; //sending

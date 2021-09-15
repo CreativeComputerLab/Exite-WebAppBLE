@@ -322,12 +322,14 @@ function loadIDE(filename) {
     if (!useSnap) {
       iframe.src = "brython/editor.html"; //"brython/console.html";  //"http://brython.info/console.html"
     } else if (internetIsConnected) {
+      console.log("internet is connected")
       if (projectName) {
         iframe.src = "https://snap.berkeley.edu/snap/snap.html#present:Username=CreativeComputerLab&ProjectName=" + projectName + "&editMode&lang=" + language;
       } else {
         iframe.src = "https://snap.berkeley.edu/snap/snap.html"
       }
     } else {
+      console.log("internet is NOT connected")
       if (projectName) {
         iframe.src = "snap/snap.html#open:snapProjects/" + projectName + ".xml&editMode&lang=" + language;
       } else {
@@ -366,6 +368,7 @@ function collapseIDE() {
     updateConnectedDevices();
   }
   $('#btn-collapse-section').css("visibility", "visible");
+  $('#main-footer').css("display", "block");
 }
 
 /**
@@ -382,6 +385,7 @@ function expandIDE() {
   }
   $('#connected-expanded').css("visibility", "visible");
   $('#btn-expand-section').show();
+  $('#main-footer').css("display", "none");
 }
 
 /**

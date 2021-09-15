@@ -65,9 +65,9 @@ function findAndConnect() {
   }*/
 
   //Other ways to scan...
-  //let bleFilters = [{ services: [IOPinPrimaryService, ACCELEROMETER_SERVICE] }]
+  //let bleFilters = [{ services: [SETALL_SERVICE, SETALL_SERVICE, SETALL_DATA_COMMAND] }]
 
-  let bleFilters = [{ acceptAllDevices: true }]
+  //let bleFilters = [{ acceptAllDevices: true }]
   /*
   let bleFilters = [
     { namePrefix: "FN", services: ["6e400001-b5a3-f393-e0a9-e50e24dcca9e"] },
@@ -84,14 +84,27 @@ function findAndConnect() {
   }
  */
 
-  navigator.bluetooth.requestDevice({ acceptAllDevices: true, optionalServices: [SETALL_SERVICE] }).then(device => {
+  //navigator.bluetooth.requestDevice({ acceptAllDevices: true, optionalServices: [SETALL_SERVICE] }).then(device => {
   //navigator.bluetooth.requestDevice({ filters: bleFilters }).then(device => {
+  //navigator.bluetooth.requestDevice({ filters: bleFilters }).then(device => {
+//*
+
+  navigator.bluetooth.requestDevice({
+    filters: [{
+      namePrefix: ['BBC micro:bit']
+    }],
+    optionalServices: [SETALL_SERVICE]
+  })  
+  .then(device => {
+//*/
+
 
       //Note: If a robot changes name from one scan to the next, this
       // device.name property still remains the same. The app must be reloaded
       // to see the new name.
       console.log("device:");
       console.log(device);
+      device.name = "MB Excite Low Cost Kit";
       console.log("Connecting to " + device.name)
 /*
       //once the user has selected a device, check that it is a supported device.
@@ -104,10 +117,9 @@ function findAndConnect() {
       if (robot == null) {
         console.log("New Robot")
         robot = new Robot(device)
-        console.log("New Robot")
+        console.log("WTF");
         robots.push(robot);
-        console.log("New Robot")
-        console.log(robot);
+
       }
 /*
       //This block is temporary until ble scanning is implemented. For now, we
