@@ -244,39 +244,8 @@ function loadIDE(filename) {
   updateInternetStatus();
 
   //let projectName = "";
-  let projectName
-  if (useHID) {
-    if (hidRobot == null) {
-      console.error("Opening snap with no robot connected?")
-    } else if (hidRobot.isFinch) {
-      //The project name will be selected in by the modal
-      if (filename) {
-        projectName = filename
-      } else {
-        showLegacyFinchModal()
-        return
-      }
-    } else {
-      projectName = "PWAhummingbird"
-    }
-  } else if (allRobotsAreGlowBoards()) {
-    projectName = "PWAGlowBoardMultiDevice";
-  } else if (getConnectedRobotCount() == 1) {
-    let r = getFirstConnectedRobot()
-    if (r.isA(Robot.ofType.FINCH)) {
-      projectName = "PWAFinchSingleDevice";
-    } else {
-      projectName = "microbitTestProjectBLE2";
-    }
-  } else {
-    if (allRobotsAreFinches()) {
-      projectName = "PWAFinchMultiDevice";
-    } else if (noRobotsAreFinches()) {
-      projectName = "PWAHummingbirdMultiDevice";
-    } else {
-      projectName = "PWAMixedMultiDevice";
-    }
-  }
+  let projectName = "microbitTestProjectBLE";
+
 
   if (projectName != currentSnapProject) {
     $('#ideLoading').css("display", "block");
