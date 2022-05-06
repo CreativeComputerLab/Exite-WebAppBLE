@@ -6,8 +6,8 @@
 // Service UUIDS from:  https://lancaster-university.github.io/microbit-docs/resources/bluetooth/bluetooth_profile.html
 const IOPinPrimaryService =        "e95d127b-251d-470a-a062-fa1922dfa9a8"  //E95D127B251D470AA062FA1922DFA9A8
   const IO_AD_Pin_Config  =        "e95d5899-251d-470a-a062-fa1922dfa9a8"  //E95D5899251D470AA062FA1922DFA9A8
-  const IO_Pin_Config =            "e95db9fe-251d-470a-a062-fa1922dfa9a8"       // E95DB9FE251D470AA062FA1922DFA9A8
-  const IO_Pin_PWM_Config  =       "e95dd822-251d-470a-a062-fa1922dfa9a8"      //E95DD822251D470AA062FA1922DFA9A8
+  const IO_Pin_Config =            "e95db9fe-251d-470a-a062-fa1922dfa9a8"  // E95DB9FE251D470AA062FA1922DFA9A8
+  const IO_Pin_PWM_Config  =       "e95dd822-251d-470a-a062-fa1922dfa9a8"  //E95DD822251D470AA062FA1922DFA9A8
   const IOPinData =                "e95d8d00-251d-470a-a062-fa1922dfa9a8"
 
 const ACCELEROMETER_SERVICE =      "e95d0753-251d-470a-a062-fa1922dfa9a8"
@@ -137,14 +137,6 @@ function findAndConnect() {
       connectNotificationsToRobot(robot, SETALL_SERVICE, SETALL_DATA_NOTIFY, onIOPinNotification);
       connectTXToRobot(robot, SETALL_SERVICE, SETALL_DATA_COMMAND);
 
-
-
-
-
-
-
-
-
     }).catch(error => {
       console.error("Error requesting device: " + error.message)
       updateConnectedDevices()
@@ -161,12 +153,12 @@ function connectNotificationsToRobot(robot, svc, chr, notificationCallback) {
   //Attempt to connect to remote GATT Server.
   device.gatt.connect().then(server => {
       // Get the Service
-      console.log("getting service")
+      //console.log("getting service")
       return server.getPrimaryService(svc);
     })
     .then(service => {
-      console.log("getting characteristic from ")
-      console.log(service)
+      //console.log("getting characteristic from ")
+      //console.log(service)
 
       // Get receiving Characteristic
       service.getCharacteristic(chr)
@@ -185,18 +177,7 @@ function connectNotificationsToRobot(robot, svc, chr, notificationCallback) {
         });
 
       // Get sending Characteristic
-      /*
-      service.getCharacteristic("6e400002-b5a3-f393-e0a9-e50e24dcca9e")
-        .then(characteristic => {
-          robot.TX = characteristic;
-          if (robot.RX != null) {
-            onConnectionComplete(robot);
-          }
-        })
-        .catch(error => {
-          console.error("Failed to get TX: " + error.message);
-        });
-        */
+      //  This is done in connectTXToRobot()
 
     })
     .catch(error => {
@@ -274,14 +255,7 @@ function onConnectionComplete(robot) {
 
   closeErrorModal()
 
-
-  //if (!robots.includes(robot)) { robots.push(robot) }
-  //if (FinchBlox && fbFrontend.RowDialog.currentDialog && fbFrontend.RowDialog.currentDialog.constructor == fbFrontend.DiscoverDialog) {
-    //finchBloxRobot = robot
- // }
-  //updateConnectedDevices();
-  //updateBatteryStatus()
-  //open snap or brython.
+  //open snap 
   loadIDE();
 }
 
@@ -308,6 +282,7 @@ function onDisconnected(event) {
 }
 
 /**
+ * NOT USED in favor of setall data xfers
  * onAccelerometerNotification - Handles characteristic value changes. This is
  * called when there is a sensor notification. Passes the data to the snap
  * iframe if available, and updates the device's Robot object.
@@ -317,10 +292,11 @@ function onDisconnected(event) {
 function onAccelerometerNotification(event) {
   var dataArray = new Uint8Array(event.target.value.buffer);
   var deviceName = event.target.service.device.name;
-  console.log('Accelerometer Data Received from ' + deviceName + ":");
-  console.log(dataArray);
+  //console.log('Accelerometer Data Received from ' + deviceName + ":");
+  //console.log(dataArray);
 
   //Do Something with the data
+  // THis function is not used
   /*
   const robot = getRobotByName(deviceName)
   if (robot != null && dataArray != null) {
@@ -350,6 +326,8 @@ function onIOPinNotification(event) {
     robot.receiveNotificationData(dataArray)
   }
 }
+
+
 /**
  * getRobotByName - Returns the Robot with the given device name or null if no
  * device with that name is found.
@@ -389,7 +367,7 @@ function getRobotByLetter(letter) {
  * @return {?string}  Next available id letter of null if they are all taken
  */
 function getNextDevLetter() {
-  return 'A';
+  return 'A';  // only 1 micro:bit is supported at this time.
 
   /*
   let letter = 'A';
@@ -411,6 +389,10 @@ function getNextDevLetter() {
 
   */
 }
+
+/************************************************************************************
+ * Unused Hummingbird specific functions from here on down
+ * **********************************************************************************/
 
 /**
  * devLetterUsed - Checks to see if any of the currently connected robots are

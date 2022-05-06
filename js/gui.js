@@ -56,21 +56,6 @@ function onLoad() {
         let message = thisLocaleTable["Ble_Required"]
         showErrorModal(title, message, false);
       }
-
-      /*if (navigator.userAgent.includes("Windows")) {
-        let count = 1
-        if (localStorage.visitCount) {
-          count = parseInt(localStorage.visitCount) + 1
-        }
-        localStorage.visitCount = count.toString()
-        //if (count == 2 || !isAvailable) {
-        if (count < 3) {
-          let title = " Beta Software "
-          let message = "This is beta software. We would love to hear about your experience! (<a href=\"https://www.birdbraintechnologies.com/contact/\">Contact Us</a>)"
-          showErrorModal(title, message, true)
-        }
-        console.log("Windows detected. This browser has visited " + localStorage.visitCount + " times.")
-      }*/
     }).catch(error => {
       console.error("Unable to determine whether bluetooth is available. Error: " + error.message)
     });

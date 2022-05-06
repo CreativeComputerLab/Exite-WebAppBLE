@@ -10,7 +10,7 @@
 
 .button-connect { color: #33EA06; }
 .button-disconnect { color: #FF5222; }
-.button-calibrate { color: #881199; display:none; }
+.button-calibrate { color: #881199; display:none;}
 .button-battery { color: #33EA06; }
 .button-battery .fa-battery-half { color: #ff9922; }
 .button-battery .fa-battery-quarter { color: #FF5222; }

@@ -45,7 +45,10 @@ function reverseEndianBytes(bytes, len) {
     }
 }
 
-
+ /**
+  * updateSetAll - get data from the snap blocks and populate the appropriate locations in the SetAllData array. 
+  * In preparation for sending the entire setAllData array to the microbit via BLE
+  */
 function updateSetAll(robot, pin, value, isDigital, isInput, isServo, isServoPulse, isAnalogPeriod, isDigitalPulse, digitalPulseLevel) {
        
             var pinData = 0;
