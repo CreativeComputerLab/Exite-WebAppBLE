@@ -253,10 +253,10 @@ function onConnectionComplete(robot) {
   console.log("Connection to " + robot.fancyName + " complete. Starting sensor polling.");
   robot.startNotifications();
 
-  closeErrorModal()
+  // closeErrorModal() Not needed. No GUI
 
   //open snap 
-  loadIDE();
+  //loadIDE();  Not needed. No GUI
 }
 
 /**
@@ -275,7 +275,8 @@ function onDisconnected(event) {
       });
       let cf = " " + thisLocaleTable["Connection_Failure"];
       let msg = robots[i].fancyName + cf;
-      showErrorModal(cf, msg, true)
+      // TODO let snap environment know there is a disconnection
+      //showErrorModal(cf, msg, true)
       robots[i].externalDisconnect();
     }
   }
@@ -316,9 +317,9 @@ function onAccelerometerNotification(event) {
 function onIOPinNotification(event) {
   var dataArray = new Uint8Array(event.target.value.buffer);
   var deviceName = event.target.service.device.name;
-  //console.log('IO Pin Data Received from ' + deviceName + ":");
-  //console.log(event.target);
- // console.log(dataArray);
+  console.log('IO Pin Data Received from ' + deviceName + ":");
+  console.log(event.target);
+  console.log(dataArray);
 
   //Do Something with the data
   const robot = getRobotByName(deviceName)

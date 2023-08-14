@@ -283,7 +283,8 @@ Robot.prototype.setDisconnected = function() {
   if (this.setAllInterval != null) {
     clearInterval(this.setAllInterval)
   }
-  updateConnectedDevices();
+  // TODO Let snap environment know the status of the device disconnection
+  //updateConnectedDevices();
 }
 
 /**

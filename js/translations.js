@@ -334,8 +334,8 @@ function setLanguage() {
     thisLocaleTable = fullTranslationTable[language]; // populate the locale phrases
   }
 
-  //console.log("thisLocaleTable:");
-  //console.log(thisLocaleTable);
+  console.log("thisLocaleTable:");
+  console.log(thisLocaleTable);
 
   translateStrings();
 }

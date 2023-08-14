@@ -25,7 +25,7 @@ function onMessage(e) {
   } else {
     // incoming command from a snap block
     let robot = getRobotByLetter(e.data.robot);
-    //console.log("incoming command from a snap block");
+    console.log("incoming command from a snap block");
     //console.log(e.data);
     updateSetAll(robot, e.data.pin, e.data.value, e.data.isDigital, e.data.isInput, e.data.isServo, e.data.isServoPulse, e.data.isAnalogPeriod, e.data.isDigitalPulse, e.data.digitalPulseLevel);
 
