@@ -370,7 +370,7 @@ Robot.prototype.write = function(data) {
  * a setInterval set up in the initializer (setAllInterval).
  */
 Robot.prototype.sendSetAll = function() {
-    //console.log("sendSetAll():")
+    console.log("sendSetAll():")
     const data = this.setAllData;
     var timeout;
     var counter = 1;
@@ -889,7 +889,20 @@ Robot.prototype.receiveNotificationData = function(data) {
   //console.log("Reverse Endian notification data:");
  //console.log(data);
   var frameNumber = this.getFrameNumber(data) >> 4; 
-  //console.log("Frame number = " + frameNumber);
+  console.log("Frame number = " + frameNumber);
+
+  var notificationMsg = 
+  {
+    robot: this.devLetter,
+    robotType: this.type,
+    frameNumber: frameNumber,
+    newNotificationData: data,
+    hasV2Microbit: this.hasV2Microbit
+  };
+
+  window.snapMicrobit.processNotificationData(notificationMsg);
+
+/*   Old 2 window messaging
   sendMessage({
     robot: this.devLetter,
     robotType: this.type,
@@ -897,6 +910,7 @@ Robot.prototype.receiveNotificationData = function(data) {
     newNotificationData: data,
     hasV2Microbit: this.hasV2Microbit
   });
+*/
 
   // The last notification frame triggers a send all event
   if (frameNumber == 4)

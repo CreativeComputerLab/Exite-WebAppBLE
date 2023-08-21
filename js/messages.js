@@ -11,8 +11,8 @@ var messagePort;
  * @param  {Object} e Message event.
  */
 function onMessage(e) {
-  //console.log("message.js incoming message");
-  //console.log(e.data);
+  console.log("message.js incoming message");
+  console.log(e.data);
 
   if (e.ports[0] != undefined) {
     //This message sets up the message port so that the app can send updates.
