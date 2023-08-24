@@ -42,8 +42,8 @@
                     }
 
                     window.snapMicrobit.processNotificationData = function (e) {
-                        console.log("processNotificationData()");
-                        console.log(e);
+                        //console.log("processNotificationData()");
+                        //console.log(e);
                         if (window.snapMicrobit.notificationData === undefined)
                           return;
                         if (e.newNotificationData != null && e.robot != null) {

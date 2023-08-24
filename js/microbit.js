@@ -370,7 +370,7 @@ Robot.prototype.write = function(data) {
  * a setInterval set up in the initializer (setAllInterval).
  */
 Robot.prototype.sendSetAll = function() {
-    console.log("sendSetAll():")
+    //console.log("sendSetAll():")
     const data = this.setAllData;
     var timeout;
     var counter = 1;
@@ -889,7 +889,7 @@ Robot.prototype.receiveNotificationData = function(data) {
   //console.log("Reverse Endian notification data:");
  //console.log(data);
   var frameNumber = this.getFrameNumber(data) >> 4; 
-  console.log("Frame number = " + frameNumber);
+  //console.log("Frame number = " + frameNumber);
 
   var notificationMsg = 
   {

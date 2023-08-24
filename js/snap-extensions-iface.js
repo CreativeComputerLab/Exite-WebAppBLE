@@ -8,3 +8,10 @@ SnapExtensions.primitives.set(
     findAndConnect();
   }
 );
+
+SnapExtensions.primitives.set(
+  'ex_isConnected()',
+  function () {
+    return deviceConnected ;
+  } 
+  ); 

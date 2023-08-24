@@ -42,14 +42,24 @@ https://stackoverflow.com/questions/52221609/connect-to-a-paired-device-without-
 https://bugs.chromium.org/p/chromium/issues/detail?id=577953
 */
 
+var deviceConnected = "null";
+
+function isConnected() {
+  console.log("isConnected()");
+  console.log(deviceConnected);
+  return deviceConnected;
+}
+
 
 /**
  * findAndConnect - Opens the chrome device chooser and connects to the chosen
  * device if it is of a recognized type.
  */
 function findAndConnect() {
+  deviceConnected = "null";
   if (getNextDevLetter() == null) {
     console.error("No more connections available.")
+    deviceConnected = false;
     return;
   }
 
@@ -136,10 +146,14 @@ function findAndConnect() {
 
       connectNotificationsToRobot(robot, SETALL_SERVICE, SETALL_DATA_NOTIFY, onIOPinNotification);
       connectTXToRobot(robot, SETALL_SERVICE, SETALL_DATA_COMMAND);
+      
+      return;
 
     }).catch(error => {
       console.error("Error requesting device: " + error.message)
-      updateConnectedDevices()
+      updateConnectedDevices();
+      deviceConnected = false;
+      return;
     })
 }
 
@@ -228,6 +242,7 @@ function connectTXToRobot(robot, svc, chr) {
                       
           }
         })
+        deviceConnected = true; // Last step in a successful connection sequence
       })    
     .catch(error => {
       console.error("Device service request failed: " + error.message);
@@ -267,6 +282,7 @@ function onConnectionComplete(robot) {
 function onDisconnected(event) {
   let device = event.target;
   //console.log('Device ' + device.name + ' is disconnected.');
+  deviceConnected = false;  // only 1 device supported 
   for (let i = 0; i < robots.length; i++) {
     if (robots[i].device.name == device.name && robots[i].isConnected) {
       sendMessage({
@@ -317,9 +333,9 @@ function onAccelerometerNotification(event) {
 function onIOPinNotification(event) {
   var dataArray = new Uint8Array(event.target.value.buffer);
   var deviceName = event.target.service.device.name;
-  console.log('IO Pin Data Received from ' + deviceName + ":");
-  console.log(event.target);
-  console.log(dataArray);
+  //console.log('IO Pin Data Received from ' + deviceName + ":");
+  //console.log(event.target);
+  //console.log(dataArray);
 
   //Do Something with the data
   const robot = getRobotByName(deviceName)

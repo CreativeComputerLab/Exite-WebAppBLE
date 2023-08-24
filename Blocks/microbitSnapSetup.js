@@ -26,7 +26,7 @@
                     //console.log("setting up message channel")
                     window.snapMicrobit.messageChannel = new MessageChannel();
                     window.snapMicrobit.messageChannel.port1.onmessage = function (e) {
-                        //console.log("Snap: Got a message: ");
+                        console.log("Snap: Got a message: ");
                         //console.log(e);
                         //console.log(e.data);
                         if (window.snapMicrobit.notificationData === undefined)
@@ -40,6 +40,25 @@
                           window.snapMicrobit.microbitIsV2[robot] = e.data.hasV2Microbit;
                         }
                     }
+
+                    window.snapMicrobit.processNotificationData = function (e) {
+                        console.log("processNotificationData()");
+                        console.log(e);
+                        if (window.snapMicrobit.notificationData === undefined)
+                          return;
+                        if (e.newNotificationData != null && e.robot != null) {
+                          let robot = e.robot;
+                          overlaySubArray(window.snapMicrobit.notificationData[robot], e.newNotificationData, e.frameNumber);
+                          //console.log("New Notification Data for pin " + e.pin);
+                          //console.log(window.snapMicrobit.notificationData[robot]);
+                          window.snapMicrobit.robotType[robot] = e.robotType;
+                          window.snapMicrobit.microbitIsV2[robot] = e.hasV2Microbit;
+                        }
+                    }
+
+
+
+
                     window.parent.postMessage("hello from snap", "*", [window.snapMicrobit.messageChannel.port2]);
 
                     window.snapMicrobit.sendCommand = function(command) {
