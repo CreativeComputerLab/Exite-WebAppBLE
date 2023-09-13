@@ -150,11 +150,19 @@ function findAndConnect() {
       return;
 
     }).catch(error => {
-      console.error("Error requesting device: " + error.message)
+      console.error("Error requesting device: " + error.message);
+      console.log(error);
+      if (error.message.includes("User cancelled")) {
+        console.log("User cancelled");
+        deviceConnected = "cancelled";
+        return; // devicedConnected should still be set to null
+      } 
+      else {
       updateConnectedDevices();
       deviceConnected = false;
       return;
-    })
+      }
+    });
 }
 
 function connectNotificationsToRobot(robot, svc, chr, notificationCallback) {
@@ -196,6 +204,7 @@ function connectNotificationsToRobot(robot, svc, chr, notificationCallback) {
     })
     .catch(error => {
       console.error("Device request failed: " + error.message);
+      console.log(error);
       //robot.isReconnecting = false //uncomment for autoreconnect
       /*if (robot.isReconnecting) {
         //console.error("Should attempt to reconnect...")
