@@ -28,6 +28,9 @@ DEALINGS IN THE SOFTWARE.
 #include "MicroBitSetAllService.h"
 //#include <string>
 #include <cstring>
+// May only be needed in setallservice
+//#include "ble_gap.h"
+//#include "ble_gatt.h"
 
 const int FIRMWARE_VERSION = 4;
 const int FIRMWARE_SIZE = 4;
@@ -1026,7 +1029,7 @@ int main()
 
     //new MicroBitAccelerometerService(*uBit.ble, uBit.accelerometer);
     //new MicroBitIOPinService(*uBit.ble, uBit.io);
-   	mbs = new MicroBitSetAllService(*uBit.ble, uBit.display, uBit.serial, setAllData);
+   	//mbs = new MicroBitSetAllService(*uBit.ble, uBit.display, uBit.serial, setAllData);
 
 
 	mbe = new MicrobitBLEExcite(uBit);

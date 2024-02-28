@@ -26,15 +26,18 @@ DEALINGS IN THE SOFTWARE.
 #ifndef MICROBIT_SETALL_SERVICE_H
 #define MICROBIT_SETALL_SERVICE_H
 
+#include "MicroBitConfig.h"
+
+#if CONFIG_ENABLED(DEVICE_BLE)
+
+#include "MicroBitBLEManager.h"
+#include "MicroBitBLEService.h"
 #include "MicroBitSerial.h"
 #include "MicroBitConfig.h"
-#include "BLE.h"
 #include "MicroBitDisplay.h"
 
-#include "GattCallbackParamTypes.h"
-#include "Gap.h"
-#include "GattAttribute.h"
-
+// WE may need this is if events have changed
+#include "EventModel.h"  // Defined in codal-core/inc
 
 // Defines the buffer size for scrolling text over BLE, hence also defines
 // the maximum string length that can be scrolled via the BLE service.
@@ -48,47 +51,50 @@ DEALINGS IN THE SOFTWARE.
 #define MICROBIT_BLE_EVT_INCOMING_DATA_FRAME_5  1029
 #define MICROBIT_ID_BLE_NOTIFICATION_BUS        1030
 
-// UUIDs for our service and characteristics
-extern const uint8_t  MicroBitSetAllServiceUUID[];
-extern const uint8_t  MicroBitSetAllNotificationUUID[];
-extern const uint8_t  MicroBitSetAllCommandUUID[];
-
-extern const uint8_t  MicroBitSetAllServiceMatrixUUID[];
-extern const uint8_t  MicroBitSetAllServiceTextUUID[];
-extern const uint8_t  MicroBitSetAllServiceScrollingSpeedUUID[];
-
-
 /**
-  * Class definition for the custom MicroBit LED Service.
-  * Provides a BLE service to remotely read and write the state of the LED display.
+  * Class definition for the custom MicroBit Temperature Service.
+  * Provides a BLE service to remotely read the silicon temperature of the SoC.
   */
-class MicroBitSetAllService
+class MicroBitSetAllService : public MicroBitBLEService
 {
     public:
 
     /**
       * Constructor.
-      * Create a representation of the LEDService
-      * @param _ble The instance of a BLE device that we're running on.
-      * @param _display An instance of MicroBitDisplay to interface with.
+      * Create a representation of the TemperatureService
+      * @param _thermometer An instance of MicroBitThermometer to use as our temperature source.
       */
     MicroBitSetAllService(BLEDevice &_ble, MicroBitDisplay &_display, MicroBitSerial &_serial, int * setAllData);
+
+    private:
+
+    /**
+      * Set up or tear down event listers
+      */
+    void listen( bool yes);
+
+    /**
+      * Invoked when BLE connects.
+      */
+    void onConnect( const microbit_ble_evt_t *p_ble_evt);
+
+    /**
+      * Invoked when BLE disconnects.
+      */
+    void onDisconnect( const microbit_ble_evt_t *p_ble_evt);
 
     /**
       * Callback. Invoked when any of our attributes are written via BLE.
       */
-    void onDataWritten(const GattWriteCallbackParams *params);
+    void onDataWritten(const microbit_ble_evt_write_t *params);
 
     /**
       * Callback. Invoked when any of our attributes are read via BLE.
       */
-    void onDataRead(GattReadAuthCallbackParams *params);
+    void onDataRead( microbit_onDataRead_t *params);
 
-
-    void sendNotificationData (uint8_t *notificationData);
-
-    private:
     void overlayDataFrame (int * bigArray, int * subArray, int frameNumber);
+
 
     // Bluetooth stack we're running on.
     BLEDevice           &ble;
@@ -96,28 +102,71 @@ class MicroBitSetAllService
     MicroBitSerial      &serial;
     int                 *setAllData;
 
+    // Note these may not be needed if we use the mbbs_cIdx enumeration
     // memory for our 8 bit control characteristics.
-    uint8_t             matrixCharacteristicBuffer[MICROBIT_BLE_MAX_PACKET_BYTES];
-    uint16_t            scrollingSpeedCharacteristicBuffer;
-    uint8_t             textCharacteristicBuffer[MICROBIT_BLE_MAXIMUM_SCROLLTEXT];
     uint8_t             setAllCharacteristicBuffer[MICROBIT_BLE_MAX_PACKET_BYTES];
     uint8_t             setAllCommandCharacteristicBuffer[MICROBIT_BLE_MAX_PACKET_BYTES];
 
-    // Handles to access each characteristic when they are held by Soft Device.
-    GattAttribute::Handle_t setAllNotifyCharacteristicHandle;
-    GattAttribute::Handle_t setAllCommandCharacteristicHandle;
+    // Index for each charactersitic in arrays of handles and UUIDs
+    typedef enum mbbs_cIdx
+    {
+        mbbs_cIdxNOTIFY,
+        mbbs_cIdxCOMMAND,
+        mbbs_cIdxCOUNT
+    } mbbs_cIdx;
+    
+    // UUIDs for our service and characteristics
+    static const uint16_t serviceUUID;
+    static const uint16_t charUUID[ mbbs_cIdxCOUNT];
 
-    GattAttribute::Handle_t matrixCharacteristicHandle;
-    GattAttribute::Handle_t textCharacteristicHandle;
-    GattAttribute::Handle_t scrollingSpeedCharacteristicHandle;
+
+    /* Obsolete here for reference
+    const uint8_t  MicroBitSetAllServiceUUID[] = {
+      0xe9,0x5d,0x00,0x01,0x25,0x1d,0x47,0x0a,0xa0,0x62,0xfa,0x19,0x22,0xdf,0xa9,0xa8
+    };
+
+    const uint8_t  MicroBitSetAllNotificationUUID[] = {
+      0xe9,0x5d,0x00,0x02,0x25,0x1d,0x47,0x0a,0xa0,0x62,0xfa,0x19,0x22,0xdf,0xa9,0xa8
+    };
+
+    const uint8_t  MicroBitSetAllCommandUUID[] = {
+      0xe9,0x5d,0x00,0x03,0x25,0x1d,0x47,0x0a,0xa0,0x62,0xfa,0x19,0x22,0xdf,0xa9,0xa8
+    };
+    */
 
     // local variable to indicate when to start processing incoming messages
     bool processIncomingData = false;
 
 
-    // We hold a copy of the GattCharacteristic, as mbed's BLE API requires this to provide read callbacks (pity!).
-    //GattCharacteristic  matrixCharacteristic;
+/*****************************************************************/
+    /* May not be needed below this line */
+
+    /**
+     * Temperature update callback
+     */
+    void temperatureUpdate(MicroBitEvent e);
+
+    // Thermometer we're using.
+    MicroBitThermometer     &thermometer;
+
+    // memory for our 8 bit control characteristics.
+    // This is the pooly named notification characteristic buffer
+    uint8_t             setAllCharacteristicBuffer[MICROBIT_BLE_MAX_PACKET_BYTES];
+    uint8_t             setAllCommandCharacteristicBuffer[MICROBIT_BLE_MAX_PACKET_BYTES];
+    uint8_t             matrixCharacteristicBuffer[MICROBIT_BLE_MAX_PACKET_BYTES];
+    // not sure if the rest are needed
+    uint16_t            scrollingSpeedCharacteristicBuffer;
+    uint8_t             textCharacteristicBuffer[MICROBIT_BLE_MAXIMUM_SCROLLTEXT];
+    
+    // Data for each characteristic when they are held by Soft Device.
+    MicroBitBLEChar      chars[ mbbs_cIdxCOUNT];
+
+    public:
+    
+    int              characteristicCount()          { return mbbs_cIdxCOUNT; };
+    MicroBitBLEChar *characteristicPtr( int idx)    { return &chars[ idx]; };
 };
 
 
+#endif
 #endif

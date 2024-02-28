@@ -14,3 +14,11 @@ Makefile
 pxtapp
 buildcache.json
 *.pyc
+
+sourceXX/*
+#source/samples/*
+#source/services/*
+
+source/*.old.h
+source/*.old.cpp
+

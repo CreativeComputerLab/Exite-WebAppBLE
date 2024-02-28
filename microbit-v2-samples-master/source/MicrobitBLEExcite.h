@@ -28,7 +28,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include "MicroBit.h"
 #include "MicroBitConfig.h"
-#include "BLE.h"
+#include "ble.h"
 #include "MicroBitDisplay.h"
 
 // Defines the buffer size for scrolling text over BLE, hence also defines
