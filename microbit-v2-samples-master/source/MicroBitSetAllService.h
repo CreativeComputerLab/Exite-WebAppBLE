@@ -66,6 +66,8 @@ class MicroBitSetAllService : public MicroBitBLEService
       */
     MicroBitSetAllService(BLEDevice &_ble, MicroBitDisplay &_display, MicroBitSerial &_serial, int * setAllData);
 
+    void sendNotificationData (uint8_t *notificationData);
+    
     private:
 
     /**
@@ -107,6 +109,10 @@ class MicroBitSetAllService : public MicroBitBLEService
     uint8_t             setAllCharacteristicBuffer[MICROBIT_BLE_MAX_PACKET_BYTES];
     uint8_t             setAllCommandCharacteristicBuffer[MICROBIT_BLE_MAX_PACKET_BYTES];
 
+    //uint32_t
+
+
+
     // Index for each charactersitic in arrays of handles and UUIDs
     typedef enum mbbs_cIdx
     {
@@ -141,30 +147,14 @@ class MicroBitSetAllService : public MicroBitBLEService
 /*****************************************************************/
     /* May not be needed below this line */
 
-    /**
-     * Temperature update callback
-     */
-    void temperatureUpdate(MicroBitEvent e);
-
-    // Thermometer we're using.
-    MicroBitThermometer     &thermometer;
-
-    // memory for our 8 bit control characteristics.
-    // This is the pooly named notification characteristic buffer
-    uint8_t             setAllCharacteristicBuffer[MICROBIT_BLE_MAX_PACKET_BYTES];
-    uint8_t             setAllCommandCharacteristicBuffer[MICROBIT_BLE_MAX_PACKET_BYTES];
-    uint8_t             matrixCharacteristicBuffer[MICROBIT_BLE_MAX_PACKET_BYTES];
-    // not sure if the rest are needed
-    uint16_t            scrollingSpeedCharacteristicBuffer;
-    uint8_t             textCharacteristicBuffer[MICROBIT_BLE_MAXIMUM_SCROLLTEXT];
-    
-    // Data for each characteristic when they are held by Soft Device.
+  /*
     MicroBitBLEChar      chars[ mbbs_cIdxCOUNT];
 
     public:
     
     int              characteristicCount()          { return mbbs_cIdxCOUNT; };
     MicroBitBLEChar *characteristicPtr( int idx)    { return &chars[ idx]; };
+    */
 };
 
 

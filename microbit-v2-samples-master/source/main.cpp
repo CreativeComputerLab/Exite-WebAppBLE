@@ -650,7 +650,11 @@ void setAnalogPins (int pinNum, int value) {
 			if (isAnalogPulsePin(setAllData[pinNum])) {
 				//pin->getAnalogValue(); // configure the pin for analog input
 				//pin->getAnalogPeriodUs();  // configure analog period pin and designate it as such for notifications
-				pin->obtainAnalogChannel();
+				
+				// TODO SPecial hidden function call exposed in V1 include code. Leave it out for now
+				//pin->obtainAnalogChannel();
+
+
 				//pin->setServoPulseUs(12345);  // This should configure the pin to be an analog output pin
 
 				// Not Needed as these are set in setPins
